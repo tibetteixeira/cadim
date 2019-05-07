@@ -1,4 +1,10 @@
 <resources>
     <string name="app_abbr">Cadim</string>
     <string name="app_name">Cardiogram Monitor</string>
+    <string name="logar">Logar</string>
+    <string name="cadastrese">Cadastre-se</string>
+    <string name="cpf">CPF</string>
+    <string name="senha">Senha</string>
+    <string name="possuiconta">Ainda não possui conta?</string>
+    <string name="logo">Logo ECG</string>
 </resources>
