@@ -2,6 +2,7 @@ package br.com.cadim.cadim;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.UserManager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
@@ -51,13 +52,13 @@ public class LoginActivity extends AppCompatActivity {
 
         //validating the inputs
         if (TextUtils.isEmpty(cpf)) {
-            cpfEditText.setError("Please enter cpf");
+            cpfEditText.setError("Por favor insira o CPF");
             cpfEditText.requestFocus();
             return;
         }
 
         if (TextUtils.isEmpty(senha)) {
-            passwordEditText.setError("Please enter passoword");
+            passwordEditText.setError("Por favor insira a senha");
             passwordEditText.requestFocus();
             return;
         }
@@ -85,11 +86,14 @@ public class LoginActivity extends AppCompatActivity {
         //the request code to define whether it is a GET or POST
         int requestCode;
 
+        JSONObject object;
+
         //constructor to initialize values
         public PerformNetworkRequest(String url, HashMap<String, String> params, int requestCode) {
             this.url = url;
             this.params = params;
             this.requestCode = requestCode;
+            this.object = null;
         }
 
         @Override
@@ -98,7 +102,7 @@ public class LoginActivity extends AppCompatActivity {
 
             try {
                 System.out.println(s);
-                JSONObject object = new JSONObject(s);
+                this.object = new JSONObject(s);
                 if (!object.getBoolean("error")) {
                     String nome = ((JSONObject) object.get("login")).getString("nome");
                     String mensagem = "Bem vindo " + nome + ". " + object.getString("message");
