@@ -1,7 +1,7 @@
 <resources>
     <string name="app_abbr">Cadim</string>
     <string name="app_name">Cardiogram Monitor</string>
-    <string name="login">Login</string>
+    <string name="entrar">Entrar</string>
     <string name="cadastrese">Cadastre-se</string>
     <string name="cpf">CPF</string>
     <string name="senha">Senha</string>

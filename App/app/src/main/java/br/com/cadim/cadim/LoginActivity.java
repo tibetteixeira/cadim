@@ -17,7 +17,7 @@ import java.util.HashMap;
 import br.com.cadim.cadim.Test.Api;
 import br.com.cadim.cadim.Test.RequestHandler;
 
-public class LoginActivity extends AppCompatActivity{
+public class LoginActivity extends AppCompatActivity {
 
     private static final int CODE_GET_REQUEST = 1024;
     private static final int CODE_POST_REQUEST = 1025;
@@ -28,6 +28,7 @@ public class LoginActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().hide();
         setContentView(R.layout.login);
 
         cpfEditText = (EditText) findViewById(R.id.cpf);
@@ -37,12 +38,10 @@ public class LoginActivity extends AppCompatActivity{
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 login();
             }
         });
     }
-
 
 
     private void login() {

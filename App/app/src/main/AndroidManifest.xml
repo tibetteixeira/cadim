@@ -23,7 +23,6 @@
         </activity>
 
         <activity
-            android:label="Login"
             android:name=".LoginActivity"
             android:parentActivityName=".MainActivity">
         </activity>
