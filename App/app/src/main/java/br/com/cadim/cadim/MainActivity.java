@@ -1,129 +1,67 @@
 package br.com.cadim.cadim;
 
-import android.os.AsyncTask;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
+
 import android.widget.Toast;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.HashMap;
-
-import br.com.cadim.cadim.Test.Api;
-import br.com.cadim.cadim.Test.RequestHandler;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int CODE_GET_REQUEST = 1024;
-    private static final int CODE_POST_REQUEST = 1025;
-    private EditText cpfEditText;
-    private EditText passwordEditText;
-    private Button loginButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.login);
+        setContentView(R.layout.activity_main);
 
-        cpfEditText = (EditText) findViewById(R.id.cpf);
-        passwordEditText = (EditText) findViewById(R.id.password);
-        loginButton = (Button) findViewById(R.id.loginButton);
-
-        loginButton.setOnClickListener(new View.OnClickListener() {
+        Handler handle = new Handler();
+        handle.postDelayed(new Runnable() {
             @Override
-            public void onClick(View view) {
+            public void run() {
+                verifyConnection();
+            }
+        }, 2000);
+    }
 
-                login();
+    private void verifyConnection() {
+        if (!isConected(MainActivity.this)) {
+            DialogNoConnection();
+        } else {
+            Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(loginIntent);
+        }
+    }
+
+    public void DialogNoConnection() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Não há conexão com a Internet");
+        builder.setMessage("Verifique os dados móveis\nou o Wi-Fi.");
+        builder.setCancelable(true);
+        builder.setNeutralButton("Tentar novamente", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                verifyConnection();
             }
         });
+        builder.show();
     }
 
+    public static boolean isConected(Context context) {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
+        if (cm != null) {
+            NetworkInfo ni = cm.getActiveNetworkInfo();
 
-    private void login() {
-        String cpf = cpfEditText.getText().toString();
-        String senha = passwordEditText.getText().toString();
-
-
-        //validating the inputs
-        if (TextUtils.isEmpty(cpf)) {
-            cpfEditText.setError("Please enter cpf");
-            cpfEditText.requestFocus();
-            return;
+            return ni != null && ni.isConnected();
         }
-
-        if (TextUtils.isEmpty(senha)) {
-            passwordEditText.setError("Please enter passoword");
-            passwordEditText.requestFocus();
-            return;
-        }
-
-        //if validation passes
-
-        HashMap<String, String> params = new HashMap<>();
-        params.put("cpf", cpf);
-        params.put("senha", senha);
-
-        //Calling the create hero API
-        PerformNetworkRequest request = new PerformNetworkRequest(Api.URL_LOGIN, params, CODE_POST_REQUEST);
-        request.execute();
+        return false;
     }
 
-
-    private class PerformNetworkRequest extends AsyncTask<Void, Void, String> {
-
-        //the url where we need to send the request
-        String url;
-
-        //the parameters
-        HashMap<String, String> params;
-
-        //the request code to define whether it is a GET or POST
-        int requestCode;
-
-        //constructor to initialize values
-        public PerformNetworkRequest(String url, HashMap<String, String> params, int requestCode) {
-            this.url = url;
-            this.params = params;
-            this.requestCode = requestCode;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-
-            try {
-                System.out.println(s);
-                JSONObject object = new JSONObject(s);
-                if (!object.getBoolean("error")) {
-                    String nome = ((JSONObject) object.get("login")).getString("nome");
-                    String mensagem = "Bem vindo " + nome + ". " + object.getString("message");
-                    Toast.makeText(getApplicationContext(), mensagem, Toast.LENGTH_SHORT).show();
-                    //refreshHeroList(object.getJSONArray("heroes"));
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-
-        //the network operation will be performed in background
-        @Override
-        protected String doInBackground(Void... voids) {
-            RequestHandler requestHandler = new RequestHandler();
-
-            if (requestCode == CODE_POST_REQUEST)
-                return requestHandler.sendPostRequest(url, params);
-
-
-            if (requestCode == CODE_GET_REQUEST)
-                return requestHandler.sendGetRequest(url);
-
-            return null;
-        }
-    }
 }
