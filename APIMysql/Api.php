@@ -42,6 +42,12 @@ if(isset($_GET['apicall'])) {
 			$response['message'] = 'Login realizado com sucesso';
 			$response['login'] = $op->login($_POST['cpf'], $_POST['senha']);
 			break; 
+
+		case 'diagnosticList':
+			$response['error'] = false;
+			$response['message'] = 'Diagnósticos listados com sucesso';
+			$response['diagnostic'] = array();
+			break;
 	}
 
 } else {
