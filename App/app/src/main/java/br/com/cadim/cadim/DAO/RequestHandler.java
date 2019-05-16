@@ -1,4 +1,4 @@
-package br.com.cadim.cadim.Test;
+package br.com.cadim.cadim.DAO;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

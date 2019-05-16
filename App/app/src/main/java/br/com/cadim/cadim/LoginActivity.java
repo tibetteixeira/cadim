@@ -2,7 +2,6 @@ package br.com.cadim.cadim;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.UserManager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
@@ -15,8 +14,8 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
-import br.com.cadim.cadim.Test.Api;
-import br.com.cadim.cadim.Test.RequestHandler;
+import br.com.cadim.cadim.DAO.Api;
+import br.com.cadim.cadim.DAO.RequestHandler;
 
 public class LoginActivity extends AppCompatActivity {
 
