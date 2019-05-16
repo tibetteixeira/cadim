@@ -29,11 +29,11 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `diagnostico` (
-  `diagnostico_id` int(11) NOT NULL,
-  `crm` varchar (10) NOT NULL,
-  `ecg_id` int(11) NOT NULL,
-  `descricao` varchar(500) NOT NULL,
-  `data_hora_diagnostico` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `d_diagnostico_id` int(11) NOT NULL,
+  `d_crm` varchar (10) NOT NULL,
+  `d_ecg_id` int(11) NOT NULL,
+  `d_descricao` varchar(500) NOT NULL,
+  `d_data_hora_diagnostico` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 -- --------------------------------------------------------
@@ -43,11 +43,11 @@ CREATE TABLE `diagnostico` (
 --
 
 CREATE TABLE `ecg` (
-  `ecg_id` int(11) NOT NULL,
-  `paciente_cpf` varchar(11) NOT NULL,
-  `ecg_file` varchar(100) NOT NULL,
-  `imc` double DEFAULT NULL,
-  `data_hora` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `e_ecg_id` int(11) NOT NULL,
+  `e_paciente_cpf` varchar(11) NOT NULL,
+  `e_ecg_file` varchar(100) NOT NULL,
+  `e_imc` decimal(4, 2) DEFAULT NULL,
+  `e_data_hora` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 -- --------------------------------------------------------
@@ -57,9 +57,9 @@ CREATE TABLE `ecg` (
 --
 
 CREATE TABLE `ecg_remedio` (
-  `ecg_id` int(11) NOT NULL,
-  `rem_id` int(11) NOT NULL,
-  `dosagem` double NOT NULL
+  `er_ecg_id` int(11) NOT NULL,
+  `er_rem_id` int(11) NOT NULL,
+  `er_dosagem` float NOT NULL
 );
 
 -- --------------------------------------------------------
@@ -69,14 +69,14 @@ CREATE TABLE `ecg_remedio` (
 --
 
 CREATE TABLE `medico` (
-  `crm` varchar(10) NOT NULL,
-  `cpf` varchar(11) NOT NULL,
-  `nome` varchar(100) NOT NULL,
-  `data_nasc` date NOT NULL,
-  `email` varchar(50) NOT NULL,
-  `senha` varchar(20) NOT NULL,
-  `sexo` varchar(1) NOT NULL,
-  `telefone` int(11) NOT NULL
+  `m_crm` varchar(10) NOT NULL,
+  `m_cpf` varchar(11) NOT NULL,
+  `m_nome` varchar(100) NOT NULL,
+  `m_data_nasc` date NOT NULL,
+  `m_email` varchar(50) NOT NULL,
+  `m_senha` varchar(20) NOT NULL,
+  `m_sexo` varchar(1) NOT NULL,
+  `m_telefone` int(11) NOT NULL
 );
 
 -- --------------------------------------------------------
@@ -86,15 +86,15 @@ CREATE TABLE `medico` (
 --
 
 CREATE TABLE `paciente` (
-  `cpf` varchar(11) NOT NULL,
-  `nome` varchar(100) NOT NULL,
-  `data_nasc` date DEFAULT NULL,
-  `email` varchar(50) NOT NULL,
-  `senha` varchar(20) NOT NULL,
-  `sexo` varchar(1) DEFAULT NULL,
-  `altura` int(3) DEFAULT NULL,
-  `peso` double NOT NULL,
-  `telefone` int(11) NOT NULL
+  `p_cpf` varchar(11) NOT NULL,
+  `p_nome` varchar(100) NOT NULL,
+  `p_data_nasc` date DEFAULT NULL,
+  `p_email` varchar(50) NOT NULL,
+  `p_senha` varchar(20) NOT NULL,
+  `p_sexo` varchar(1) DEFAULT NULL,
+  `p_altura` smallint DEFAULT NULL,
+  `p_peso` decimal(5, 2) NOT NULL,
+  `p_telefone` int(11) NOT NULL
 );
 
 -- --------------------------------------------------------
@@ -104,8 +104,8 @@ CREATE TABLE `paciente` (
 --
 
 CREATE TABLE `remedio` (
-  `rem_id` int(11) NOT NULL,
-  `rem_nome` varchar(30) NOT NULL
+  `r_rem_id` int(11) NOT NULL,
+  `r_rem_nome` varchar(30) NOT NULL
 );
 
 -- --------------------------------------------------------
@@ -115,9 +115,9 @@ CREATE TABLE `remedio` (
 --
 
 CREATE TABLE `remedio_paciente` (
-  `paciente_cpf` varchar(11) NOT NULL,
-  `rem_id` int(11) NOT NULL,
-  `dosagem` double NOT NULL
+  `rp_paciente_cpf` varchar(11) NOT NULL,
+  `rp_rem_id` int(11) NOT NULL,
+  `rp_dosagem` float NOT NULL
 );
 
 -- --------------------------------------------------------
@@ -129,43 +129,43 @@ CREATE TABLE `remedio_paciente` (
 -- Indexes for table `diagnostico`
 --
 ALTER TABLE diagnostico
-ADD INDEX (`diagnostico_id`);
+ADD INDEX (`d_diagnostico_id`);
 
 --
 -- Indexes for table `ecg`
 --
 ALTER TABLE ecg
-ADD INDEX (`ecg_id`);
+ADD INDEX (`e_ecg_id`);
 
 --
 -- Indexes for table `ecg_remedio`
 --
 ALTER TABLE ecg_remedio
-ADD INDEX (`ecg_id`,`rem_id`);
+ADD INDEX (`er_ecg_id`,`er_rem_id`);
 
 --
 -- Indexes for table `medico`
 --
 ALTER TABLE medico
-ADD INDEX (`crm`);
+ADD INDEX (`m_crm`);
 
 --
 -- Indexes for table `paciente`
 --
 ALTER TABLE paciente
-ADD INDEX (`cpf`);
+ADD INDEX (`p_cpf`);
 
 --
 -- Indexes for table `remedio`
 --
 ALTER TABLE remedio
-ADD INDEX (`rem_id`);
+ADD INDEX (`r_rem_id`);
 
 --
 -- Indexes for table `remedio_paciente`
 --
 ALTER TABLE remedio_paciente
-ADD INDEX (`paciente_cpf`,`rem_id`);
+ADD INDEX (`rp_paciente_cpf`,`rp_rem_id`);
 
 
 -- --------------------------------------------------------
@@ -177,43 +177,43 @@ ADD INDEX (`paciente_cpf`,`rem_id`);
 -- Primary key for table `diagnostico`
 --
 ALTER TABLE `diagnostico`
-  ADD PRIMARY KEY (`diagnostico_id`);
+  ADD PRIMARY KEY (`d_diagnostico_id`);
 
 --
 -- Indexes for table `ecg`
 --
 ALTER TABLE `ecg`
-  ADD PRIMARY KEY (`ecg_id`);
+  ADD PRIMARY KEY (`e_ecg_id`);
 
 --
 -- Primary key for table `ecg_remedio`
 --
 ALTER TABLE `ecg_remedio`
-  ADD PRIMARY KEY (`ecg_id`,`rem_id`);
+  ADD PRIMARY KEY (`er_ecg_id`,`er_rem_id`);
 
 --
 -- Primary key for table `medico`
 --
 ALTER TABLE `medico`
-  ADD PRIMARY KEY (`crm`);
+  ADD PRIMARY KEY (`m_crm`);
 
 --
 -- Primary key for table `paciente`
 --
 ALTER TABLE `paciente`
-  ADD PRIMARY KEY (`cpf`);
+  ADD PRIMARY KEY (`p_cpf`);
 
 --
 -- Primary key for table `remedio`
 --
 ALTER TABLE `remedio`
-  ADD PRIMARY KEY (`rem_id`);
+  ADD PRIMARY KEY (`r_rem_id`);
 
 --
 -- Primary key for table `remedio_paciente`
 --
 ALTER TABLE `remedio_paciente`
-  ADD PRIMARY KEY (`paciente_cpf`,`rem_id`);
+  ADD PRIMARY KEY (`rp_paciente_cpf`,`rp_rem_id`);
 
 
 --
@@ -224,19 +224,19 @@ ALTER TABLE `remedio_paciente`
 -- AUTO_INCREMENT for table `diagnostico`
 --
 ALTER TABLE `diagnostico`
-  MODIFY `diagnostico_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `d_diagnostico_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `ecg`
 --
 ALTER TABLE `ecg`
-  MODIFY `ecg_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `e_ecg_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `remedio`
 --
 ALTER TABLE `remedio`
-  MODIFY `rem_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `r_rem_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Constraints for dumped tables
@@ -247,34 +247,34 @@ ALTER TABLE `remedio`
 --
 
 ALTER TABLE `medico`
-  ADD CONSTRAINT `unique_cpf_medico` UNIQUE KEY (`crm`);
+  ADD CONSTRAINT `unique_cpf_medico` UNIQUE KEY (`m_crm`);
 
 --
 -- Limitadores para a tabela `diagnostico`
 --
 ALTER TABLE `diagnostico`
-  ADD CONSTRAINT `diag_medico` FOREIGN KEY (`crm`) REFERENCES `medico` (`crm`),
-  ADD CONSTRAINT `diag_ecg` FOREIGN KEY (`ecg_id`) REFERENCES `ecg` (`ecg_id`);
+  ADD CONSTRAINT `diag_medico` FOREIGN KEY (`d_crm`) REFERENCES `medico` (`m_crm`),
+  ADD CONSTRAINT `diag_ecg` FOREIGN KEY (`d_ecg_id`) REFERENCES `ecg` (`e_ecg_id`);
 
 --
 -- Limitadores para a tabela `ecg`
 --
 ALTER TABLE `ecg`
-  ADD CONSTRAINT `ecg_paciente` FOREIGN KEY (`paciente_cpf`) REFERENCES `paciente` (`cpf`);
+  ADD CONSTRAINT `ecg_paciente` FOREIGN KEY (`e_paciente_cpf`) REFERENCES `paciente` (`p_cpf`);
 
 --
 -- Limitadores para a tabela `ecg_remedio`
 --
 ALTER TABLE `ecg_remedio`
-  ADD CONSTRAINT `ecg_remedio_ecg` FOREIGN KEY (`ecg_id`) REFERENCES `ecg` (`ecg_id`),
-  ADD CONSTRAINT `ecg_remedio_rem` FOREIGN KEY (`rem_id`) REFERENCES `remedio` (`rem_id`);
+  ADD CONSTRAINT `ecg_remedio_ecg` FOREIGN KEY (`er_ecg_id`) REFERENCES `ecg` (`e_ecg_id`),
+  ADD CONSTRAINT `ecg_remedio_rem` FOREIGN KEY (`er_rem_id`) REFERENCES `remedio` (`r_rem_id`);
 
 --
 -- Limitadores para a tabela `remedio_paciente`
 --
 ALTER TABLE `remedio_paciente`
-  ADD CONSTRAINT `remedio_paciente_pac` FOREIGN KEY (`paciente_cpf`) REFERENCES `paciente` (`cpf`),
-  ADD CONSTRAINT `remedio_paciente_rem` FOREIGN KEY (`rem_id`) REFERENCES `remedio` (`rem_id`);
+  ADD CONSTRAINT `remedio_paciente_pac` FOREIGN KEY (`rp_paciente_cpf`) REFERENCES `paciente` (`p_cpf`),
+  ADD CONSTRAINT `remedio_paciente_rem` FOREIGN KEY (`rp_rem_id`) REFERENCES `remedio` (`r_rem_id`);
 
 
 COMMIT;
