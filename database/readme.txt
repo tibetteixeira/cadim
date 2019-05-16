@@ -1,0 +1,1 @@
+será utilizado o banco MySql pois apresenta ótima performace mediante baixa carga de trabalho.
