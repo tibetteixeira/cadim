@@ -14,16 +14,21 @@ import android.widget.TextView;
 
 public class ListaDiagnosticoActivity extends AppCompatActivity {
 
-    private static String[] nomes = {"nome 1", "nome 2", "nome 3", "nome 4", "nome 5"};
-    private static String[] crms = {"crm 1", "crm 2", "crm 3", "crm 4", "crm 5"};
-    private static String[] descricoes = {"descricao 1", "descricao 2", "descricao 3", "descricao 4", "descricao 5"};
-    private static String[] datas_horas = {"data_hora 1", "data_hora 2", "data_hora 3", "data_hora 4", "data_hora 5"};
+    private static String[] nomes;
+    private static String[] crms;
+    private static String[] descricoes;
+    private static String[] datas_horas;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
         setContentView(R.layout.lista_diagnostico);
+
+        nomes = new String[]{"nome 1", "nome 2", "nome 3", "nome 4", "nome 5"};
+        crms = new String[]{"crm 1", "crm 2", "crm 3", "crm 4", "crm 5"};
+        descricoes = new String[]{"descricao 1", "descricao 2", "descricao 3", "descricao 4", "descricao 5"};
+        datas_horas = new String[]{"data_hora 1", "data_hora 2", "data_hora 3", "data_hora 4", "data_hora 5"};
 
         ListView listDiagnostico = (ListView) findViewById(R.id.lista_diagnostico);
         CustomListDiagnostico cld = new CustomListDiagnostico();
@@ -35,7 +40,7 @@ public class ListaDiagnosticoActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            return 0;
+            return nomes.length;
         }
 
         @Override

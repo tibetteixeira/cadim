@@ -1,5 +1,7 @@
 package br.com.cadim.cadim;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +15,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.Objects;
 
 import br.com.cadim.cadim.DAO.Api;
 import br.com.cadim.cadim.DAO.RequestHandler;
@@ -23,17 +26,16 @@ public class LoginActivity extends AppCompatActivity {
     private static final int CODE_POST_REQUEST = 1025;
     private EditText cpfEditText;
     private EditText passwordEditText;
-    private Button loginButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().hide();
+        Objects.requireNonNull(getSupportActionBar()).hide();
         setContentView(R.layout.login);
 
         cpfEditText = (EditText) findViewById(R.id.cpf);
         passwordEditText = (EditText) findViewById(R.id.password);
-        loginButton = (Button) findViewById(R.id.loginButton);
+        Button loginButton = (Button) findViewById(R.id.loginButton);
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,24 +73,29 @@ public class LoginActivity extends AppCompatActivity {
         //Calling the create hero API
         PerformNetworkRequest request = new PerformNetworkRequest(Api.URL_LOGIN, params, CODE_POST_REQUEST);
         request.execute();
+        JSONObject jsonObject = request.object;
+        if (request.object != null) {
+            try {
+                String nome = ((JSONObject) jsonObject.get("login")).getString("nome");
+                System.out.println("Nome aqui ----->: " + nome);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            Intent listaDiagnosticoIntent = new Intent(LoginActivity.this, ListaDiagnosticoActivity.class);
+            startActivity(listaDiagnosticoIntent);
+        }
     }
 
-
+    @SuppressLint("StaticFieldLeak")
     private class PerformNetworkRequest extends AsyncTask<Void, Void, String> {
 
-        //the url where we need to send the request
-        String url;
+        private String url;
+        private HashMap<String, String> params;
+        private int requestCode;
+        private JSONObject object;
 
-        //the parameters
-        HashMap<String, String> params;
-
-        //the request code to define whether it is a GET or POST
-        int requestCode;
-
-        JSONObject object;
-
-        //constructor to initialize values
-        public PerformNetworkRequest(String url, HashMap<String, String> params, int requestCode) {
+        PerformNetworkRequest(String url, HashMap<String, String> params, int requestCode) {
             this.url = url;
             this.params = params;
             this.requestCode = requestCode;
@@ -103,11 +110,9 @@ public class LoginActivity extends AppCompatActivity {
                 System.out.println(s);
                 this.object = new JSONObject(s);
                 if (!object.getBoolean("error")) {
-                    String nome = ((JSONObject) object.get("login")).getString("nome");
-                    String mensagem = "Bem vindo " + nome + ". " + object.getString("message");
-                    Toast.makeText(getApplicationContext(), mensagem, Toast.LENGTH_SHORT).show();
-                    //refreshHeroList(object.getJSONArray("heroes"));
+                    Toast.makeText(getApplicationContext(), "OK", Toast.LENGTH_SHORT).show();
                 }
+                
             } catch (JSONException e) {
                 e.printStackTrace();
             }
