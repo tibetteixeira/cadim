@@ -19,7 +19,7 @@ Class DbOperation {
 
 	function login($cpf, $senha) {
 		try {	
-			$stmt = $this->pdo->prepare("SELECT p_nome, p_data_nasc FROM paciente WHERE p_cpf = ? and p_senha = ? ");
+			$stmt = $this->pdo->prepare("SELECT p_cpf, p_nome, p_data_nasc, p_email, p_senha, p_sexo, p_altura, p_peso, p_telefone FROM paciente WHERE p_cpf = ? and p_senha = ? ");
 			$stmt->bindValue(1, $cpf);
 			$stmt->bindValue(2, $senha);
 			$stmt->execute();
@@ -27,8 +27,15 @@ Class DbOperation {
 			$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 			foreach ($result as $field) {
 				$paciente = array();
+				$paciente['cpf'] = $field['p_cpf'];
 				$paciente['nome'] = $field['p_nome'];
 				$paciente['data_nasc'] = $field['p_data_nasc'];
+				$paciente['email'] = $field['p_email'];
+				$paciente['senha'] = $field['p_senha'];
+				$paciente['sexo'] = $field['p_sexo'];
+				$paciente['altura'] = $field['p_altura'];
+				$paciente['peso'] = $field['p_peso'];
+				$paciente['telefone'] = $field['p_telefone'];
 			}
 
 		} catch(PDOException $e) {
@@ -42,7 +49,7 @@ Class DbOperation {
 		try {	
 			$stmt = $this->pdo->prepare("SELECT d_ecg_id, d_diagnostico_id, d_descricao, d_data_hora_diagnostico, m_nome, m_crm 
 										FROM ecg
-										INNER JOIN paciente ON (p_cpf = p_paciente_cpf) 
+										INNER JOIN paciente ON (p_cpf = e_paciente_cpf) 
 										INNER JOIN diagnostico ON (d_ecg_id = e_ecg_id)
 										INNER JOIN medico ON (d_crm = m_crm)
 										WHERE p_cpf = ?");

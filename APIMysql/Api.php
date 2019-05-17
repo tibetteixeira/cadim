@@ -44,9 +44,10 @@ if(isset($_GET['apicall'])) {
 			break; 
 
 		case 'diagnosticList':
+			isTheseParametersAvailable(array('cpf'));
 			$response['error'] = false;
 			$response['message'] = 'Diagnósticos listados com sucesso';
-			$response['diagnostic'] = array();
+			$response['diagnostic'] = $op->getDiagnosticList($_POST['cpf']);
 			break;
 	}
 
