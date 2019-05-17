@@ -277,6 +277,58 @@ ALTER TABLE `remedio_paciente`
   ADD CONSTRAINT `remedio_paciente_rem` FOREIGN KEY (`rp_rem_id`) REFERENCES `remedio` (`r_rem_id`);
 
 
+/**************************** 
+ ******** INSERTIONS ********
+ ****************************/
+
+-- Paciente
+
+INSERT INTO paciente (p_cpf, p_nome, p_data_nasc, p_email, p_senha, p_sexo, p_altura, p_peso, p_telefone) VALUES ('123', 'tibet', '1999-03-03', 'tibet@gmail.com', '123', 'M', 170, 72, '859123456789');
+
+INSERT INTO paciente (p_cpf, p_nome, p_data_nasc, p_email, p_senha, p_sexo, p_altura, p_peso, p_telefone) VALUES ('456', 'franklyn', '1999-03-03', 'franklyn@gmail.com', '456', 'M', 170, 72, '859123456789');
+
+INSERT INTO paciente (p_cpf, p_nome, p_data_nasc, p_email, p_senha, p_sexo, p_altura, p_peso, p_telefone) VALUES ('789', 'daniel', '1999-03-03', 'daniel@gmail.com', '789', 'M', 170, 72, '859123456789');
+
+INSERT INTO paciente (p_cpf, p_nome, p_data_nasc, p_email, p_senha, p_sexo, p_altura, p_peso, p_telefone) VALUES ('120', 'abner', '1999-03-03', 'abner@gmail.com', '120', 'M', 170, 72, '859123456789');
+
+-- Médico
+
+INSERT INTO medico (m_crm, m_cpf, m_nome, m_data_nasc, m_email, m_senha, m_sexo, m_telefone) VALUES ('M120', '120', 'Dr abner', '1999-03-03', 'abner@gmail.com', '120', 'M', '859123456789');
+INSERT INTO medico (m_crm, m_cpf, m_nome, m_data_nasc, m_email, m_senha, m_sexo, m_telefone) VALUES ('M123', '123', 'Dr tibet', '1999-03-03', 'tibet@gmail.com', '123', 'M', '859123456789');
+
+-- ECG
+
+INSERT INTO ecg (e_ecg_id, e_paciente_cpf, e_ecg_file, e_imc, e_data_hora) VALUES (1, '123', 'test1', NULL, '2019-05-17 00:21');
+INSERT INTO ecg (e_ecg_id, e_paciente_cpf, e_ecg_file, e_imc, e_data_hora) VALUES (2, '123', 'test2', NULL, '2019-05-18 00:23');
+INSERT INTO ecg (e_ecg_id, e_paciente_cpf, e_ecg_file, e_imc, e_data_hora) VALUES (3, '123', 'test3', NULL, '2019-05-19 00:25');
+INSERT INTO ecg (e_ecg_id, e_paciente_cpf, e_ecg_file, e_imc, e_data_hora) VALUES (4, '123', 'test4', NULL, '2019-05-20 00:29');
+INSERT INTO ecg (e_ecg_id, e_paciente_cpf, e_ecg_file, e_imc, e_data_hora) VALUES (5, '123', 'test5', NULL, '2019-05-21 00:31');
+INSERT INTO ecg (e_ecg_id, e_paciente_cpf, e_ecg_file, e_imc, e_data_hora) VALUES (6, '123', 'test6', NULL, '2019-05-22 00:33');
+INSERT INTO ecg (e_ecg_id, e_paciente_cpf, e_ecg_file, e_imc, e_data_hora) VALUES (8, '456', 'test8', NULL, '2019-05-23 00:37');
+INSERT INTO ecg (e_ecg_id, e_paciente_cpf, e_ecg_file, e_imc, e_data_hora) VALUES (7, '456', 'test7', NULL, '2019-05-24 00:36');
+INSERT INTO ecg (e_ecg_id, e_paciente_cpf, e_ecg_file, e_imc, e_data_hora) VALUES (9, '789', 'test9', NULL, '2019-05-25 00:50');
+INSERT INTO ecg (e_ecg_id, e_paciente_cpf, e_ecg_file, e_imc, e_data_hora) VALUES (10, '789', 'test10', NULL, '2019-05-26 00:55');
+INSERT INTO ecg (e_ecg_id, e_paciente_cpf, e_ecg_file, e_imc, e_data_hora) VALUES (11, '789', 'test11', NULL, '2019-05-27 00:50');
+
+-- Diagnostico
+
+INSERT INTO diagnostico (d_diagnostico_id, d_crm, d_ecg_id, d_descricao, d_data_hora_diagnostico) VALUES (1, 'M123', 1, 'Descrição 1', '2019-06-01 05:21');
+INSERT INTO diagnostico (d_diagnostico_id, d_crm, d_ecg_id, d_descricao, d_data_hora_diagnostico) VALUES (2, 'M120', 2, 'Descrição 2', '2019-06-17 05:22');
+INSERT INTO diagnostico (d_diagnostico_id, d_crm, d_ecg_id, d_descricao, d_data_hora_diagnostico) VALUES (3, 'M120', 3, 'Descrição 3', '2019-06-18 05:23');
+INSERT INTO diagnostico (d_diagnostico_id, d_crm, d_ecg_id, d_descricao, d_data_hora_diagnostico) VALUES (4, 'M123', 1, 'Descrição 4', '2019-06-19 05:24');
+INSERT INTO diagnostico (d_diagnostico_id, d_crm, d_ecg_id, d_descricao, d_data_hora_diagnostico) VALUES (5, 'M120', 1, 'Descrição 5', '2019-06-11 05:25');
+INSERT INTO diagnostico (d_diagnostico_id, d_crm, d_ecg_id, d_descricao, d_data_hora_diagnostico) VALUES (6, 'M120', 2, 'Descrição 6', '2019-06-13 06:27');
+INSERT INTO diagnostico (d_diagnostico_id, d_crm, d_ecg_id, d_descricao, d_data_hora_diagnostico) VALUES (7, 'M123', 5, 'Descrição 7', '2019-06-15 06:28');
+INSERT INTO diagnostico (d_diagnostico_id, d_crm, d_ecg_id, d_descricao, d_data_hora_diagnostico) VALUES (8, 'M120', 6, 'Descrição 8', '2019-06-17 06:29');
+INSERT INTO diagnostico (d_diagnostico_id, d_crm, d_ecg_id, d_descricao, d_data_hora_diagnostico) VALUES (9, 'M120', 7, 'Descrição 9', '2019-06-11 06:30');
+INSERT INTO diagnostico (d_diagnostico_id, d_crm, d_ecg_id, d_descricao, d_data_hora_diagnostico) VALUES (10, 'M123', 4, 'Descrição 10', '2019-06-13 06:31');
+INSERT INTO diagnostico (d_diagnostico_id, d_crm, d_ecg_id, d_descricao, d_data_hora_diagnostico) VALUES (11, 'M120', 8, 'Descrição 11', '2019-06-18 07:32');
+INSERT INTO diagnostico (d_diagnostico_id, d_crm, d_ecg_id, d_descricao, d_data_hora_diagnostico) VALUES (12, 'M120', 9, 'Descrição 12', '2019-06-11 07:33');
+INSERT INTO diagnostico (d_diagnostico_id, d_crm, d_ecg_id, d_descricao, d_data_hora_diagnostico) VALUES (13, 'M123', 9, 'Descrição 13', '2019-06-20 07:34');
+INSERT INTO diagnostico (d_diagnostico_id, d_crm, d_ecg_id, d_descricao, d_data_hora_diagnostico) VALUES (14, 'M120', 9, 'Descrição 14', '2019-06-26 07:35');
+INSERT INTO diagnostico (d_diagnostico_id, d_crm, d_ecg_id, d_descricao, d_data_hora_diagnostico) VALUES (15, 'M120', 10, 'Descrição 15', '2019-06-17 07:36');
+
+
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
