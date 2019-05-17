@@ -1,7 +1,6 @@
 package br.com.cadim.cadim;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,10 +10,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 
-import android.widget.Toast;
-
 public class MainActivity extends AppCompatActivity {
-
+    public static final int CODE_GET_REQUEST = 1024;
+    public static final int CODE_POST_REQUEST = 1025;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

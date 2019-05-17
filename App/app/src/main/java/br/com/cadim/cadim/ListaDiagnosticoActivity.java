@@ -8,14 +8,16 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import br.com.cadim.cadim.Model.Paciente;
+import java.util.ArrayList;
 
 public class ListaDiagnosticoActivity extends AppCompatActivity {
 
-    private static String[] nomes;
-    private static String[] crms;
-    private static String[] descricoes;
-    private static String[] datas_horas;
+    private static ArrayList<Integer> ecgs;
+    private static ArrayList<Integer> diagnosticos;
+    private static ArrayList<String> nomes;
+    private static ArrayList<String> crms;
+    private static ArrayList<String> descricoes;
+    private static ArrayList<String> datas_horas;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,16 +25,12 @@ public class ListaDiagnosticoActivity extends AppCompatActivity {
         getSupportActionBar().hide();
         setContentView(R.layout.lista_diagnostico);
 
-        Paciente paciente = getIntent().getExtras().getParcelable("paciente");
-
-        System.out.println(paciente.getCpf());
-        System.out.println(paciente.getNome());
-        System.out.println(paciente.getEmail());
-
-        nomes = new String[]{"nome 1", "nome 2", "nome 3", "nome 4", "nome 5"};
-        crms = new String[]{"crm 1", "crm 2", "crm 3", "crm 4", "crm 5"};
-        descricoes = new String[]{"descricao 1", "descricao 2", "descricao 3", "descricao 4", "descricao 5"};
-        datas_horas = new String[]{"data_hora 1", "data_hora 2", "data_hora 3", "data_hora 4", "data_hora 5"};
+        ecgs = getIntent().getExtras().getIntegerArrayList("ecgs");
+        diagnosticos = getIntent().getExtras().getIntegerArrayList("diagnosticos");
+        descricoes = getIntent().getExtras().getStringArrayList("descricoes");
+        nomes = getIntent().getExtras().getStringArrayList("nomes");
+        crms = getIntent().getExtras().getStringArrayList("crms");
+        datas_horas = getIntent().getExtras().getStringArrayList("datas_horas");
 
         ListView listDiagnostico = (ListView) findViewById(R.id.lista_diagnostico);
         CustomListDiagnostico cld = new CustomListDiagnostico();
@@ -44,7 +42,7 @@ public class ListaDiagnosticoActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            return nomes.length;
+            return diagnosticos.size();
         }
 
         @Override
@@ -66,10 +64,10 @@ public class ListaDiagnosticoActivity extends AppCompatActivity {
             TextView descricao = (TextView) view.findViewById(R.id.descricao);
             TextView data_hora = (TextView) view.findViewById(R.id.data_hora);
 
-            nome.setText(nomes[i]);
-            crm.setText(crms[i]);
-            descricao.setText(descricoes[i]);
-            data_hora.setText(datas_horas[i]);
+            nome.setText(nomes.get(i));
+            crm.setText("CRM: " + crms.get(i));
+            descricao.setText(descricoes.get(i));
+            data_hora.setText(datas_horas.get(i));
 
             return view;
         }

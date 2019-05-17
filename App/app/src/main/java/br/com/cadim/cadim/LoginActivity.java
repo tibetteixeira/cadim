@@ -23,8 +23,6 @@ import br.com.cadim.cadim.Model.Paciente;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private static final int CODE_GET_REQUEST = 1024;
-    private static final int CODE_POST_REQUEST = 1025;
     private EditText cpfEditText;
     private EditText passwordEditText;
 
@@ -52,7 +50,6 @@ public class LoginActivity extends AppCompatActivity {
         String senha = passwordEditText.getText().toString();
 
 
-        //validating the inputs
         if (TextUtils.isEmpty(cpf)) {
             cpfEditText.setError("Por favor insira o CPF");
             cpfEditText.requestFocus();
@@ -65,14 +62,11 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        //if validation passes
-
         HashMap<String, String> params = new HashMap<>();
         params.put("cpf", cpf);
         params.put("senha", senha);
 
-        //Calling the create hero API
-        PerformNetworkRequest request = new PerformNetworkRequest(Api.URL_LOGIN, params, CODE_POST_REQUEST);
+        PerformNetworkRequest request = new PerformNetworkRequest(Api.URL_LOGIN, params, MainActivity.CODE_POST_REQUEST);
         request.execute();
     }
 
@@ -99,7 +93,6 @@ public class LoginActivity extends AppCompatActivity {
                 System.out.println(s);
 
                 this.object = new JSONObject(s);
-                System.out.println("Meu objeto ---> " + this.object);
                 if (!object.getBoolean("error")) {
                     Toast.makeText(getApplicationContext(), "Login realizado com sucesso", Toast.LENGTH_SHORT).show();
 
@@ -116,11 +109,11 @@ public class LoginActivity extends AppCompatActivity {
                     Paciente paciente = new Paciente(cpf, nome, dataNascimento, email, senha, sexo, altura, peso, telefone);
 
 
-                    Intent listaDiagnosticoIntent = new Intent(LoginActivity.this,
-                            ListaDiagnosticoActivity.class);
-                    listaDiagnosticoIntent.putExtra("paciente", paciente);
+                    Intent loadDiagnosticIntent = new Intent(LoginActivity.this,
+                            LoadDiagnostic.class);
+                    loadDiagnosticIntent.putExtra("paciente", paciente);
 
-                    startActivity(listaDiagnosticoIntent);
+                    startActivity(loadDiagnosticIntent);
                 }
 
             } catch (JSONException e) {
@@ -128,16 +121,15 @@ public class LoginActivity extends AppCompatActivity {
             }
         }
 
-        //the network operation will be performed in background
         @Override
         protected String doInBackground(Void... voids) {
             RequestHandler requestHandler = new RequestHandler();
 
-            if (requestCode == CODE_POST_REQUEST)
+            if (requestCode == MainActivity.CODE_POST_REQUEST)
                 return requestHandler.sendPostRequest(url, params);
 
 
-            if (requestCode == CODE_GET_REQUEST)
+            if (requestCode == MainActivity.CODE_GET_REQUEST)
                 return requestHandler.sendGetRequest(url);
 
             return null;
