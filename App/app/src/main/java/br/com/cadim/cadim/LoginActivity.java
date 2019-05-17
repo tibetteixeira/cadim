@@ -19,6 +19,7 @@ import java.util.Objects;
 
 import br.com.cadim.cadim.DAO.Api;
 import br.com.cadim.cadim.DAO.RequestHandler;
+import br.com.cadim.cadim.Model.Paciente;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -73,18 +74,6 @@ public class LoginActivity extends AppCompatActivity {
         //Calling the create hero API
         PerformNetworkRequest request = new PerformNetworkRequest(Api.URL_LOGIN, params, CODE_POST_REQUEST);
         request.execute();
-        JSONObject jsonObject = request.object;
-        if (request.object != null) {
-            try {
-                String nome = ((JSONObject) jsonObject.get("login")).getString("nome");
-                System.out.println("Nome aqui ----->: " + nome);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            Intent listaDiagnosticoIntent = new Intent(LoginActivity.this, ListaDiagnosticoActivity.class);
-            startActivity(listaDiagnosticoIntent);
-        }
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -108,11 +97,32 @@ public class LoginActivity extends AppCompatActivity {
 
             try {
                 System.out.println(s);
+
                 this.object = new JSONObject(s);
+                System.out.println("Meu objeto ---> " + this.object);
                 if (!object.getBoolean("error")) {
-                    Toast.makeText(getApplicationContext(), "OK", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Login realizado com sucesso", Toast.LENGTH_SHORT).show();
+
+                    String cpf = ((JSONObject) object.get("login")).getString("cpf");
+                    String nome = ((JSONObject) object.get("login")).getString("nome");
+                    String dataNascimento = ((JSONObject) object.get("login")).getString("data_nasc");
+                    String email = ((JSONObject) object.get("login")).getString("email");
+                    String senha = ((JSONObject) object.get("login")).getString("senha");
+                    String sexo = ((JSONObject) object.get("login")).getString("sexo");
+                    int altura = ((JSONObject) object.get("login")).getInt("altura");
+                    double peso = ((JSONObject) object.get("login")).getDouble("peso");
+                    int telefone = ((JSONObject) object.get("login")).getInt("telefone");
+
+                    Paciente paciente = new Paciente(cpf, nome, dataNascimento, email, senha, sexo, altura, peso, telefone);
+
+
+                    Intent listaDiagnosticoIntent = new Intent(LoginActivity.this,
+                            ListaDiagnosticoActivity.class);
+                    listaDiagnosticoIntent.putExtra("paciente", paciente);
+
+                    startActivity(listaDiagnosticoIntent);
                 }
-                
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }

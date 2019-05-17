@@ -5,12 +5,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.CursorAdapter;
-import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import br.com.cadim.cadim.Model.Paciente;
 
 public class ListaDiagnosticoActivity extends AppCompatActivity {
 
@@ -24,6 +22,12 @@ public class ListaDiagnosticoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
         setContentView(R.layout.lista_diagnostico);
+
+        Paciente paciente = getIntent().getExtras().getParcelable("paciente");
+
+        System.out.println(paciente.getCpf());
+        System.out.println(paciente.getNome());
+        System.out.println(paciente.getEmail());
 
         nomes = new String[]{"nome 1", "nome 2", "nome 3", "nome 4", "nome 5"};
         crms = new String[]{"crm 1", "crm 2", "crm 3", "crm 4", "crm 5"};

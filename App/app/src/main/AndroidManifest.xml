@@ -26,6 +26,9 @@
             android:name=".LoginActivity"
             android:parentActivityName=".MainActivity">
         </activity>
+
+        <activity android:name=".ListaDiagnosticoActivity"></activity>
+
     </application>
 
 </manifest>
