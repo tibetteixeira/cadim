@@ -3,6 +3,7 @@ package br.com.cadim.cadim;
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.content.pm.PackageManager;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -14,10 +15,18 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.androidplot.util.Redrawer;
+import com.androidplot.xy.AdvancedLineAndPointRenderer;
+import com.androidplot.xy.BoundaryMode;
+import com.androidplot.xy.XYPlot;
+import com.androidplot.xy.XYSeries;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.ref.WeakReference;
+import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,9 +36,15 @@ import java.util.Objects;
 public class AquisitionEcgActivity extends AppCompatActivity {
 
     static ArrayList<String> signalEcg;
-    private static final int PERMISSION_REQUEST_CODE = 1;
     private static String signalAcquisitionDate;
     ConnectionThread connect;
+
+    private static Redrawer redrawer;
+    private static XYPlot plot;
+    private static ECGModel ecgSeries;
+    private static int lowerBoundary;
+    private static int upperBoundary;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,16 +54,21 @@ public class AquisitionEcgActivity extends AppCompatActivity {
 
 
         ImageButton btnPauseAquisition = (ImageButton) findViewById(R.id.btnPauseAquisition);
+        plot = (XYPlot) findViewById(R.id.plotECG);
 
-        if (!checkPermission()) requestPermission();
+        signalEcg = new ArrayList<>();
+        signalAcquisitionDate = nowDate();
+        lowerBoundary = 0;
+        upperBoundary = 500;
 
         btnPauseAquisition.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 connect.cancel();
                 message("Comunicação encerrada!");
-                ArrayList<Integer> signal = mountSignal(signalEcg);
-                saveSignal(signal);
+                ArrayList<Integer> signalECG = mountSignal(signalEcg);
+                plotSignal(signalECG);
+                saveSignal(signalECG);
                 message("Success Saved!!");
             }
         });
@@ -56,9 +76,16 @@ public class AquisitionEcgActivity extends AppCompatActivity {
         startAquisition();
     }
 
+    public static String nowDate() {
+        @SuppressLint("SimpleDateFormat")
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd-HH_mm_ss");
+        Date now = new Date();
+
+        return dateFormat.format(now);
+    }
+
     private void startAquisition() {
-        signalEcg = new ArrayList<>();
-        signalAcquisitionDate = nowDate();
         BluetoothAdapter btAdapter = BluetoothAdapter.getDefaultAdapter();
         if (btAdapter == null) {
             System.out.println("Que pena! Hardware Bluetooth não está funcionando :(");
@@ -97,20 +124,6 @@ public class AquisitionEcgActivity extends AppCompatActivity {
         return signal;
     }
 
-    private boolean checkPermission() {
-        int result = ContextCompat.checkSelfPermission(AquisitionEcgActivity.this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        return result == PackageManager.PERMISSION_GRANTED;
-    }
-
-    private void requestPermission() {
-
-        if (ActivityCompat.shouldShowRequestPermissionRationale(AquisitionEcgActivity.this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            Toast.makeText(AquisitionEcgActivity.this, "Write External Storage permission allows us to do store images. Please allow this permission in App Settings.", Toast.LENGTH_LONG).show();
-        } else {
-            ActivityCompat.requestPermissions(AquisitionEcgActivity.this, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
-        }
-    }
-
     private void saveSignal(ArrayList<Integer> signalEcg) {
         File file, dir;
         FileOutputStream fos;
@@ -145,13 +158,24 @@ public class AquisitionEcgActivity extends AppCompatActivity {
         }
     }
 
-    public static String nowDate() {
-        @SuppressLint("SimpleDateFormat")
+    private void plotSignal(ArrayList<Integer> signalECG) {
+        ecgSeries = new ECGModel(signalECG, 50);
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd-HH_mm_ss");
-        Date now = new Date();
+        MyFadeFormatter formatter = new MyFadeFormatter(1000);
+        formatter.setLegendIconEnabled(false);
 
-        return dateFormat.format(now);
+        plot.addSeries(ecgSeries, formatter);
+        plot.setRangeBoundaries(0, 1000, BoundaryMode.FIXED);
+        plot.setDomainBoundaries(lowerBoundary, upperBoundary, BoundaryMode.FIXED);
+
+        // reduce the number of range labels
+        plot.setLinesPerRangeLabel(3);
+
+        // set a redraw rate of 30hz and start immediately:
+        redrawer = new Redrawer(plot, 30, true);
+
+        // start generating ecg data in the background:
+        ecgSeries.start(new WeakReference<>(plot.getRenderer(AdvancedLineAndPointRenderer.class)));
     }
 
     public static Handler handler = new Handler() {
@@ -166,8 +190,6 @@ public class AquisitionEcgActivity extends AppCompatActivity {
             byte[] data = bundle.getByteArray("data");
             String dataString = new String(data);
 
-
-
             /* Aqui ocorre a decisão de ação, baseada na string
                 recebida. Caso a string corresponda à uma das
                 mensagens de status de conexão (iniciadas com --),
@@ -178,9 +200,8 @@ public class AquisitionEcgActivity extends AppCompatActivity {
             else if (dataString.equals("---S"))
                 System.out.println("Conectado :D");
             else {
-                // System.out.println(dataString);
+//                System.out.println(dataString);
                 signalEcg.addAll(new ArrayList<>(Arrays.asList(dataString.split("\n"))));
-                System.out.println(dataString);
             }
         }
     };
@@ -198,5 +219,127 @@ public class AquisitionEcgActivity extends AppCompatActivity {
 
     private void message(String msg) {
         Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+    }
+
+    public static class MyFadeFormatter extends AdvancedLineAndPointRenderer.Formatter {
+
+        private int trailSize;
+
+        MyFadeFormatter(int trailSize) {
+            this.trailSize = trailSize;
+        }
+
+        @Override
+        public Paint getLinePaint(int thisIndex, int latestIndex, int seriesSize) {
+            // offset from the latest index:
+            int offset;
+            if (thisIndex > latestIndex) {
+                offset = latestIndex + (seriesSize - thisIndex);
+            } else {
+                offset = latestIndex - thisIndex;
+            }
+
+            float scale = 255f / trailSize;
+            int alpha = (int) (255 - (offset * scale));
+            getLinePaint().setAlpha(alpha > 0 ? alpha : 0);
+            return getLinePaint();
+        }
+    }
+
+    public static class ECGModel implements XYSeries {
+
+        private Number[] data;
+        private final long delayMs;
+        private final Thread thread;
+        private ArrayList<Integer> ECGSignal;
+        private boolean keepRunning;
+        private int latestIndex;
+        private int sizeSignal;
+
+        private WeakReference<AdvancedLineAndPointRenderer> rendererRef;
+
+        /**
+         * @param updateFreqHz Frequency at which new samples are added to the model
+         */
+        ECGModel(ArrayList<Integer> signalECG, int updateFreqHz) {
+
+            latestIndex = 0;
+            ECGSignal = new ArrayList<>(signalECG);
+            sizeSignal = signalECG.size();
+
+            data = new Number[sizeSignal];
+
+            // translate hz into delay (ms):
+            delayMs = 1000 / updateFreqHz;
+
+
+            thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        while (keepRunning) {
+
+
+                            if (latestIndex == upperBoundary) {
+                                lowerBoundary += 500;
+                                upperBoundary += 500;
+                                plot.setDomainBoundaries(lowerBoundary, upperBoundary, BoundaryMode.FIXED);
+                            }
+
+                            // insert a sample
+                            data[latestIndex] = ECGSignal.get(latestIndex);
+
+                            if (latestIndex == sizeSignal - 1) {
+                                keepRunning = false;
+                            }
+
+                            if (rendererRef.get() != null) {
+                                rendererRef.get().setLatestIndex(latestIndex);
+                                Thread.sleep(delayMs);
+
+                            } else {
+                                keepRunning = false;
+                            }
+
+                            latestIndex++;
+                        }
+                    } catch (InterruptedException e) {
+                        keepRunning = false;
+                    }
+                }
+            });
+        }
+
+        void start(final WeakReference<AdvancedLineAndPointRenderer> rendererRef) {
+            this.rendererRef = rendererRef;
+            keepRunning = true;
+            thread.start();
+        }
+
+        @Override
+        public int size() {
+            return ECGSignal.size();
+        }
+
+        @Override
+        public Number getX(int index) {
+            return index;
+        }
+
+        @Override
+        public Number getY(int index) {
+            return data[index];
+        }
+
+        @Override
+        public String getTitle() {
+            return "Signal ECG";
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        redrawer.finish();
     }
 }

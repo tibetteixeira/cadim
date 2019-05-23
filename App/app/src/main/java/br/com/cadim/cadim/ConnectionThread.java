@@ -22,98 +22,48 @@ public class ConnectionThread extends Thread {
     boolean running = false;
     boolean isConnected = false;
 
-    /*  Este construtor prepara o dispositivo para atuar como cliente.
-        Tem como argumento uma string contendo o endereço MAC do dispositivo
-    Bluetooth para o qual deve ser solicitada uma conexão.
-     */
     public ConnectionThread(String btDevAddress) {
 
         this.btDevAddress = btDevAddress;
     }
 
-    /*  O método run() contem as instruções que serão efetivamente realizadas
-        em uma nova thread.
-     */
     public void run() {
 
-        /*  Anuncia que a thread está sendo executada.
-            Pega uma referência para o adaptador Bluetooth padrão.
-         */
         this.running = true;
         BluetoothAdapter btAdapter = BluetoothAdapter.getDefaultAdapter();
 
         try {
 
-                /*  Obtem uma representação do dispositivo Bluetooth com
-                    endereço btDevAddress.
-                    Cria um socket Bluetooth.
-                 */
             BluetoothDevice btDevice = btAdapter.getRemoteDevice(btDevAddress);
             btSocket = btDevice.createRfcommSocketToServiceRecord(UUID.fromString(myUUID));
 
-                /*  Envia ao sistema um comando para cancelar qualquer processo
-                    de descoberta em execução.
-                 */
             btAdapter.cancelDiscovery();
 
-                /*  Solicita uma conexão ao dispositivo cujo endereço é
-                    btDevAddress.
-                    Permanece em estado de espera até que a conexão seja
-                    estabelecida.
-                 */
             if (btSocket != null) {
                 btSocket.connect();
             }
 
         } catch (IOException e) {
-
-                /*  Caso ocorra alguma exceção, exibe o stack trace para debug.
-                    Envia um código para a Activity principal, informando que
-                    a conexão falhou.
-                 */
+            /*  código informando que ocorreu um erro na conexão
+             */
             e.printStackTrace();
             toAquisitionEcgActivity("---N".getBytes());
         }
 
-
-
-        /*  Pronto, estamos conectados! Agora, só precisamos gerenciar a conexão.
-         */
-
         if (btSocket != null) {
 
-            /*  Envia um código para a Activity principal informando que a
-                a conexão ocorreu com sucesso.
+            /*  código informando que a conexão ocorreu com sucesso
              */
             this.isConnected = true;
             toAquisitionEcgActivity("---S".getBytes());
 
             try {
 
-                /*  Obtem referências para os fluxos de entrada e saída do
-                    socket Bluetooth.
-                 */
                 input = btSocket.getInputStream();
                 output = btSocket.getOutputStream();
 
-                /*  Permanece em estado de espera até que uma mensagem seja
-                    recebida.
-                    Armazena a mensagem recebida no buffer.
-                    Envia a mensagem recebida para a Activity principal, do
-                    primeiro ao último byte lido.
-                    Esta thread permanecerá em estado de escuta até que
-                    a variável running assuma o valor false.
-                 */
                 while (running) {
 
-                    /*  Cria um byte array para armazenar temporariamente uma
-                        mensagem recebida.
-                        O inteiro bytes representará o número de bytes lidos na
-                        última transmissão recebida.
-                        O inteiro bytesRead representa o número total de bytes
-                        lidos antes de uma quebra de linha. A quebra de linha
-                        representa o fim da mensagem.
-                     */
                     byte[] buffer = new byte[1024];
                     int bytes;
                     int bytesRead = -1;
@@ -123,21 +73,17 @@ public class ConnectionThread extends Thread {
                         que a mensagem foi transmitida por completo.
                      */
                     do {
-                        bytes = input.read(buffer, bytesRead + 1, 16);
+                        bytes = input.read(buffer, bytesRead + 1, 32);
                         bytesRead += bytes;
                     } while (buffer[bytesRead] != '\n');
 
-                    /*  A mensagem recebida é enviada para a Activity principal.
-                     */
+
                     toAquisitionEcgActivity(Arrays.copyOfRange(buffer, 0, bytesRead - 1));
 
                 }
 
             } catch (IOException e) {
-
-                /*  Caso ocorra alguma exceção, exibe o stack trace para debug.
-                    Envia um código para a Activity principal, informando que
-                    a conexão falhou.
+                /*  código informando que ocorreu um erro na conexão
                  */
                 e.printStackTrace();
                 toAquisitionEcgActivity("---N".getBytes());
@@ -147,7 +93,7 @@ public class ConnectionThread extends Thread {
 
     }
 
-    /*  Utiliza um handler para enviar um byte array à Activity principal.
+    /*  Utiliza um handler para enviar um byte array à Activity.
         O byte array é encapsulado em um Bundle e posteriormente em uma Message
         antes de ser enviado.
      */
@@ -160,31 +106,7 @@ public class ConnectionThread extends Thread {
         AquisitionEcgActivity.handler.sendMessage(message);
     }
 
-    /*  Método utilizado pela Activity principal para transmitir uma mensagem ao
-        outro lado da conexão.
-        A mensagem deve ser representada por um byte array.
-     */
-    public void write(byte[] data) {
-
-        if (output != null) {
-            try {
-
-                /*  Transmite a mensagem.
-                 */
-                output.write(data);
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-
-            /*  Envia à Activity principal um código de erro durante a conexão.
-             */
-            toAquisitionEcgActivity("---N".getBytes());
-        }
-    }
-
-    /*  Método utilizado pela Activity principal para encerrar a conexão
+    /*  Método utilizado pela Activity para encerrar a conexão
      */
     public void cancel() {
 
