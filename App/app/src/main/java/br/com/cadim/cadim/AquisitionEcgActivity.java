@@ -92,6 +92,7 @@ public class AquisitionEcgActivity extends AppCompatActivity {
 
         connect = new ConnectionThread("00:21:13:01:00:71");
         connect.start();
+        plotSignal2();
 
         /* Um descanso rápido, para evitar bugs esquisitos.
          */
@@ -111,7 +112,7 @@ public class AquisitionEcgActivity extends AppCompatActivity {
                 hb = (int) Double.parseDouble(signalEcg.get(index_sync + 6));
                 lb = (int) Double.parseDouble(signalEcg.get(index_sync + 7));
 
-                System.out.println("HB: " + hb + " LB: " + lb);
+//                System.out.println("HB: " + hb + " LB: " + lb);
                 signal.add((hb << 8) + lb);
             }
         }
@@ -120,7 +121,27 @@ public class AquisitionEcgActivity extends AppCompatActivity {
     }
 
     private static void plotSignal(ArrayList<Integer> signalECG, int lowerBoundary, int upperBoundary) {
-        ecgSeries = new ECGModel(signalECG, 50);
+//        ecgSeries = new ECGModel(signalECG, 10000);
+
+        MyFadeFormatter formatter = new MyFadeFormatter(1000);
+        formatter.setLegendIconEnabled(false);
+
+        plot.addSeries(ecgSeries, formatter);
+        plot.setRangeBoundaries(0, 1000, BoundaryMode.FIXED);
+        plot.setDomainBoundaries(lowerBoundary, upperBoundary, BoundaryMode.FIXED);
+
+        // reduce the number of range labels
+        plot.setLinesPerRangeLabel(3);
+
+        // set a redraw rate of 30hz and start immediately:
+        redrawer = new Redrawer(plot, 30, true);
+
+        // start generating ecg data in the background:
+        ecgSeries.start(new WeakReference<>(plot.getRenderer(AdvancedLineAndPointRenderer.class)));
+    }
+
+    private static void plotSignal2() {
+        ecgSeries = new ECGModel(30);
 
         MyFadeFormatter formatter = new MyFadeFormatter(1000);
         formatter.setLegendIconEnabled(false);
@@ -161,16 +182,18 @@ public class AquisitionEcgActivity extends AppCompatActivity {
             else if (dataString.equals("---S"))
                 System.out.println("Conectado :D");
             else {
-                System.out.println(dataString);
+//                System.out.println(dataString);
                 signalECGBuffer.addAll(new ArrayList<>(Arrays.asList(dataString.split("\n"))));
 
-                if (signalECGBuffer.size() > 10000) {
-
+                if (signalECGBuffer.size() >= 15000) {
+//                    System.out.println();
                     signalECGTmp = (ArrayList<String>) signalECGBuffer.clone();
                     signalECGBuffer.clear();
                     signalECGMount.addAll(mountSignal(signalECGTmp));
-                    plotSignal(signalECGMount, lowerBoundary + 500 * mountIndex, upperBoundary + 500 * mountIndex);
-                    mountIndex += 1;
+                    ecgSeries.appendSignal(signalECGMount);
+                    signalECGMount.clear();
+//                    plotSignal(signalECGMount, lowerBoundary + 500 * mountIndex, upperBoundary + 500 * mountIndex);
+//                    mountIndex += 1;
                 }
 
             }
@@ -215,17 +238,15 @@ public class AquisitionEcgActivity extends AppCompatActivity {
         private WeakReference<AdvancedLineAndPointRenderer> rendererRef;
 
         /**
-         * @param signalECG    Array that contains the ECG signal
+//         * @param signalECG    Array that contains the ECG signal
          * @param updateFreqHz Frequency at which new samples are added to the model
          */
-        ECGModel(ArrayList<Integer> signalECG, int updateFreqHz) {
+        ECGModel(int updateFreqHz) {
 
             latestIndex = 0;
-            ECGSignal = new ArrayList<>(signalECG);
-            sizeSignal = signalECG.size();
-
-            data = new Number[sizeSignal];
-
+//            ECGSignal = new ArrayList<>(signalECG);
+//            sizeSignal = signalECG.size();
+            data = new Number[0];
             // translate hz into delay (ms):
             delayMs = 1000 / updateFreqHz;
 
@@ -236,6 +257,7 @@ public class AquisitionEcgActivity extends AppCompatActivity {
                     try {
                         while (keepRunning) {
 
+                            data = getData();
 
                             if (latestIndex == upperBoundary) {
                                 lowerBoundary += 500;
@@ -244,7 +266,7 @@ public class AquisitionEcgActivity extends AppCompatActivity {
                             }
 
                             // insert a sample
-                            data[latestIndex] = ECGSignal.get(latestIndex);
+//                            data[latestIndex] = ECGSignal.get(latestIndex);
 
                             if (latestIndex == sizeSignal - 1) {
                                 keepRunning = false;
@@ -273,9 +295,23 @@ public class AquisitionEcgActivity extends AppCompatActivity {
             thread.start();
         }
 
+        private void appendSignal(ArrayList<Integer> ECGSignalTemp) {
+            Number[] dataTemp = new Number[this.data.length];
+
+            System.arraycopy(data, 0, dataTemp, 0, this.data.length);
+            this.data = new Number[dataTemp.length + ECGSignalTemp.size()];
+
+            System.arraycopy(dataTemp, 0, this.data, 0, dataTemp.length);
+            System.arraycopy(ECGSignalTemp.toArray(), 0, this.data, dataTemp.length, ECGSignalTemp.size());
+        }
+
+        public Number[] getData(){
+            return this.data;
+        }
+
         @Override
         public int size() {
-            return ECGSignal.size();
+            return data.length;
         }
 
         @Override
