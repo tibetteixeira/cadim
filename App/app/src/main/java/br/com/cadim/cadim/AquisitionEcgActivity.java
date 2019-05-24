@@ -30,6 +30,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.Objects;
 
+import static br.com.cadim.cadim.ManageFile.message;
+
 public class AquisitionEcgActivity extends AppCompatActivity {
 
     static ArrayList<String> signalECGBuffer;
@@ -60,7 +62,6 @@ public class AquisitionEcgActivity extends AppCompatActivity {
         txtPeriodoAquisicao = (TextView) findViewById(R.id.txtPeriodoAquisicao);
         signalECGBuffer = new ArrayList<>();
         signalECGMount = new ArrayList<>();
-        signalAcquisitionDate = nowDate();
         lowerBoundary = 0;
         upperBoundary = 500;
         mountIndex = 0;
@@ -69,23 +70,14 @@ public class AquisitionEcgActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 connect.cancel();
-                message("Comunicação encerrada!");
+                message(getApplicationContext(), "Comunicação encerrada!");
 //                ArrayList<Integer> signalECG = mountSignal(signalECGBuffer);
 //                saveSignal(signalECG);
-                message("Success Saved!!");
+                message(getApplicationContext(), "Success Saved!!");
             }
         });
 
         startAquisition();
-    }
-
-    public static String nowDate() {
-        @SuppressLint("SimpleDateFormat")
-
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd-HH_mm_ss");
-        Date now = new Date();
-
-        return dateFormat.format(now);
     }
 
     private void startAquisition() {
@@ -125,40 +117,6 @@ public class AquisitionEcgActivity extends AppCompatActivity {
         }
 
         return signal;
-    }
-
-    private void saveSignal(ArrayList<Integer> signalEcg) {
-        File file, dir;
-        FileOutputStream fos;
-
-        String fileName = "ECG-" + signalAcquisitionDate + ".txt";
-
-        byte[] data;
-        String signal;
-
-        try {
-            dir = new File(getDirectory());
-            file = new File(dir, fileName);
-
-            int fileLines;
-
-            for (fileLines = 0; fileLines < signalEcg.size() - 1; fileLines++) {
-
-                signal = signalEcg.get(fileLines) + " ";
-                data = signal.getBytes();
-
-                fos = new FileOutputStream(file, true);
-                fos.write(data);
-                fos.flush();
-                fos.close();
-            }
-
-        } catch (FileNotFoundException e) {
-            message("Erro FNFE: " + e.getMessage());
-
-        } catch (IOException e) {
-            message("Erro IOE: " + e.getMessage());
-        }
     }
 
     private static void plotSignal(ArrayList<Integer> signalECG, int lowerBoundary, int upperBoundary) {
@@ -218,21 +176,6 @@ public class AquisitionEcgActivity extends AppCompatActivity {
             }
         }
     };
-
-    public static String getDirectory() {
-
-        File root = new File(Environment
-                .getExternalStorageDirectory()
-                + "/Arida/MobileECG/");
-
-        if (!root.exists()) root.mkdirs();
-
-        return root.toString();
-    }
-
-    private void message(String msg) {
-        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
-    }
 
     public static class MyFadeFormatter extends AdvancedLineAndPointRenderer.Formatter {
 
