@@ -2,17 +2,15 @@ package br.com.cadim.cadim;
 
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
-import android.content.pm.PackageManager;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.androidplot.util.Redrawer;
@@ -26,7 +24,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
-import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,7 +32,10 @@ import java.util.Objects;
 
 public class AquisitionEcgActivity extends AppCompatActivity {
 
-    static ArrayList<String> signalEcg;
+    static ArrayList<String> signalECGBuffer;
+    static ArrayList<String> signalECGTmp;
+    static ArrayList<Integer> signalECGMount;
+
     private static String signalAcquisitionDate;
     ConnectionThread connect;
 
@@ -44,6 +44,8 @@ public class AquisitionEcgActivity extends AppCompatActivity {
     private static ECGModel ecgSeries;
     private static int lowerBoundary;
     private static int upperBoundary;
+    private static TextView txtPeriodoAquisicao;
+    private static int mountIndex;
 
 
     @Override
@@ -55,20 +57,21 @@ public class AquisitionEcgActivity extends AppCompatActivity {
 
         ImageButton btnPauseAquisition = (ImageButton) findViewById(R.id.btnPauseAquisition);
         plot = (XYPlot) findViewById(R.id.plotECG);
-
-        signalEcg = new ArrayList<>();
+        txtPeriodoAquisicao = (TextView) findViewById(R.id.txtPeriodoAquisicao);
+        signalECGBuffer = new ArrayList<>();
+        signalECGMount = new ArrayList<>();
         signalAcquisitionDate = nowDate();
         lowerBoundary = 0;
         upperBoundary = 500;
+        mountIndex = 0;
 
         btnPauseAquisition.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 connect.cancel();
                 message("Comunicação encerrada!");
-                ArrayList<Integer> signalECG = mountSignal(signalEcg);
-                plotSignal(signalECG);
-                saveSignal(signalECG);
+//                ArrayList<Integer> signalECG = mountSignal(signalECGBuffer);
+//                saveSignal(signalECG);
                 message("Success Saved!!");
             }
         });
@@ -107,7 +110,7 @@ public class AquisitionEcgActivity extends AppCompatActivity {
         }
     }
 
-    private ArrayList<Integer> mountSignal(ArrayList<String> signalEcg) {
+    private static ArrayList<Integer> mountSignal(ArrayList<String> signalEcg) {
         ArrayList<Integer> signal = new ArrayList<>();
         int hb, lb;
         for (int index_sync = 0; index_sync < signalEcg.size() - 7; index_sync++) {
@@ -158,7 +161,7 @@ public class AquisitionEcgActivity extends AppCompatActivity {
         }
     }
 
-    private void plotSignal(ArrayList<Integer> signalECG) {
+    private static void plotSignal(ArrayList<Integer> signalECG, int lowerBoundary, int upperBoundary) {
         ecgSeries = new ECGModel(signalECG, 50);
 
         MyFadeFormatter formatter = new MyFadeFormatter(1000);
@@ -200,8 +203,18 @@ public class AquisitionEcgActivity extends AppCompatActivity {
             else if (dataString.equals("---S"))
                 System.out.println("Conectado :D");
             else {
-//                System.out.println(dataString);
-                signalEcg.addAll(new ArrayList<>(Arrays.asList(dataString.split("\n"))));
+                System.out.println(dataString);
+                signalECGBuffer.addAll(new ArrayList<>(Arrays.asList(dataString.split("\n"))));
+
+                if (signalECGBuffer.size() > 10000) {
+
+                    signalECGTmp = (ArrayList<String>) signalECGBuffer.clone();
+                    signalECGBuffer.clear();
+                    signalECGMount.addAll(mountSignal(signalECGTmp));
+                    plotSignal(signalECGMount, lowerBoundary + 500 * mountIndex, upperBoundary + 500 * mountIndex);
+                    mountIndex += 1;
+                }
+
             }
         }
     };
@@ -259,6 +272,7 @@ public class AquisitionEcgActivity extends AppCompatActivity {
         private WeakReference<AdvancedLineAndPointRenderer> rendererRef;
 
         /**
+         * @param signalECG    Array that contains the ECG signal
          * @param updateFreqHz Frequency at which new samples are added to the model
          */
         ECGModel(ArrayList<Integer> signalECG, int updateFreqHz) {
