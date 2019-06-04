@@ -1,14 +1,18 @@
 package br.com.cadim.cadim;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+
+import br.com.cadim.cadim.Model.Paciente;
 
 public class ListaDiagnosticoActivity extends AppCompatActivity {
 
@@ -25,6 +29,9 @@ public class ListaDiagnosticoActivity extends AppCompatActivity {
         getSupportActionBar().hide();
         setContentView(R.layout.lista_diagnostico);
 
+        ImageButton btnExame = (ImageButton) findViewById(R.id.buttonExame);
+        ImageButton btnSettings = (ImageButton) findViewById(R.id.buttonSettings);
+
         ecgs = getIntent().getExtras().getIntegerArrayList("ecgs");
         diagnosticos = getIntent().getExtras().getIntegerArrayList("diagnosticos");
         descricoes = getIntent().getExtras().getStringArrayList("descricoes");
@@ -34,6 +41,24 @@ public class ListaDiagnosticoActivity extends AppCompatActivity {
 
         ListView listDiagnostico = (ListView) findViewById(R.id.lista_diagnostico);
         CustomListDiagnostico cld = new CustomListDiagnostico();
+
+        btnExame.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Paciente paciente = getIntent().getExtras().getParcelable("paciente");
+
+                Intent inicialIntent = new Intent(ListaDiagnosticoActivity.this, InicialActivity.class);
+                inicialIntent.putExtra("paciente", paciente);
+                startActivity(inicialIntent);
+            }
+        });
+
+        btnSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                System.out.println("Settings");
+            }
+        });
 
         listDiagnostico.setAdapter(cld);
     }

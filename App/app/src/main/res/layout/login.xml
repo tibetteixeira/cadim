@@ -1,94 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-    <ScrollView
-        android:orientation="vertical"
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/scrollView2"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scrollView2"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:orientation="vertical">
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true"
-        >
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:weightSum="3">
+
         <LinearLayout
-            android:orientation="vertical"
-            android:weightSum="3"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            >
-            <LinearLayout
-                android:paddingTop="@dimen/_10sdp"
-                android:gravity="bottom|center"
-                android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="bottom|center"
+            android:paddingTop="@dimen/_10sdp">
+
+            <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
-                <ImageView
-                    android:contentDescription="@string/logo"
-                    android:scaleType="centerInside"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/_130sdp"
-                    android:src="@drawable/ecg_icon"/>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_marginLeft="@dimen/_20sdp"
-                android:layout_marginRight="@dimen/_20sdp"
-                android:orientation="vertical"
-                android:layout_weight="1"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <EditText
-                    android:id="@+id/cpf"
-                    android:hint="@string/cpf"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/_20sdp"
-                    android:inputType="text">
-                </EditText>
-
-                <EditText
-                    android:hint="@string/senha"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/_20sdp"
-                    android:id="@+id/password"
-                    android:inputType="textPassword"/>
-                <Button
-                    android:textSize="@dimen/_16sdp"
-                    android:textColor="@color/colorPrimary"
-                    android:background="@drawable/styled_edittext"
-                    android:id="@+id/loginButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end"
-                    android:text="@string/entrar" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:gravity="bottom"
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1">
-
-                <TextView
-                    android:textSize="@dimen/_12sdp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:gravity="bottom"
-                    android:text="@string/possuiconta"
-                    android:textColor="@color/colorAccent" />
-                <Button
-                    android:paddingBottom="@dimen/_12sdp"
-                    android:paddingTop="@dimen/_12sdp"
-                    android:background="@color/colorPrimary"
-                    android:textSize="@dimen/_16sdp"
-                    android:textColor="@color/colorWhite"
-                    android:id="@+id/CadastrarButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:text="@string/cadastrese" />
-            </LinearLayout>
+                android:layout_height="@dimen/_130sdp"
+                android:contentDescription="@string/logo"
+                android:scaleType="centerInside"
+                android:src="@drawable/ecg_icon" />
         </LinearLayout>
-    </ScrollView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/_20sdp"
+            android:layout_marginRight="@dimen/_20sdp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/cpf"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/_20sdp"
+                android:hint="@string/cpf"
+                android:inputType="text"
+                android:text="123"></EditText>
+
+            <EditText
+                android:id="@+id/password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/_20sdp"
+                android:hint="@string/senha"
+                android:inputType="textPassword"
+                android:text="123" />
+
+            <Button
+                android:id="@+id/loginButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:background="@drawable/styled_edittext"
+                android:text="@string/entrar"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/_16sdp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="bottom"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="bottom"
+                android:text="@string/possuiconta"
+                android:textColor="@color/colorAccent"
+                android:textSize="@dimen/_12sdp" />
+
+            <Button
+                android:id="@+id/CadastrarButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:background="@color/colorPrimary"
+                android:paddingTop="@dimen/_12sdp"
+                android:paddingBottom="@dimen/_12sdp"
+                android:text="@string/cadastrese"
+                android:textColor="@color/colorWhite"
+                android:textSize="@dimen/_16sdp" />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>
 
