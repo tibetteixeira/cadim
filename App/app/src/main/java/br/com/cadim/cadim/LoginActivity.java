@@ -44,7 +44,6 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-
     private void login() {
         String cpf = cpfEditText.getText().toString();
         String senha = passwordEditText.getText().toString();

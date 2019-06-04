@@ -2,9 +2,11 @@ package br.com.cadim.cadim;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -12,6 +14,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import br.com.cadim.cadim.Model.Diagnostico;
 import br.com.cadim.cadim.Model.Paciente;
 
 public class ListaDiagnosticoActivity extends AppCompatActivity {
@@ -22,6 +25,7 @@ public class ListaDiagnosticoActivity extends AppCompatActivity {
     private static ArrayList<String> crms;
     private static ArrayList<String> descricoes;
     private static ArrayList<String> datas_horas;
+    private static ListView diagnosticList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,8 +33,11 @@ public class ListaDiagnosticoActivity extends AppCompatActivity {
         getSupportActionBar().hide();
         setContentView(R.layout.lista_diagnostico);
 
+        diagnosticList = (ListView) findViewById(R.id.diagnostics);
+
         ImageButton btnExame = (ImageButton) findViewById(R.id.buttonExame);
         ImageButton btnSettings = (ImageButton) findViewById(R.id.buttonSettings);
+        CustomListDiagnostico cld = new CustomListDiagnostico();
 
         ecgs = getIntent().getExtras().getIntegerArrayList("ecgs");
         diagnosticos = getIntent().getExtras().getIntegerArrayList("diagnosticos");
@@ -39,8 +46,6 @@ public class ListaDiagnosticoActivity extends AppCompatActivity {
         crms = getIntent().getExtras().getStringArrayList("crms");
         datas_horas = getIntent().getExtras().getStringArrayList("datas_horas");
 
-        ListView listDiagnostico = (ListView) findViewById(R.id.lista_diagnostico);
-        CustomListDiagnostico cld = new CustomListDiagnostico();
 
         btnExame.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,7 +65,18 @@ public class ListaDiagnosticoActivity extends AppCompatActivity {
             }
         });
 
-        listDiagnostico.setAdapter(cld);
+        diagnosticList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Diagnostico diagnostico = (Diagnostico) diagnosticList.getAdapter().getItem(position);
+
+                Intent diagnosticIntent = new Intent(ListaDiagnosticoActivity.this, DiagnosticActivity.class);
+                diagnosticIntent.putExtra("diagnostic", diagnostico);
+                startActivity(diagnosticIntent);
+            }
+        });
+
+        diagnosticList.setAdapter(cld);
     }
 
     class CustomListDiagnostico extends BaseAdapter {
@@ -71,8 +87,16 @@ public class ListaDiagnosticoActivity extends AppCompatActivity {
         }
 
         @Override
-        public Object getItem(int i) {
-            return null;
+        public Diagnostico getItem(int i) {
+
+            Diagnostico diagnostico = new Diagnostico(diagnosticos.get(i),
+                    ecgs.get(i),
+                    descricoes.get(i),
+                    crms.get(i),
+                    nomes.get(i),
+                    datas_horas.get(i));
+
+            return diagnostico;
         }
 
         @Override
