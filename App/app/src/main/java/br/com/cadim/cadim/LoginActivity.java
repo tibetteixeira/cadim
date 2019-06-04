@@ -108,15 +108,9 @@ public class LoginActivity extends AppCompatActivity {
 
                     Paciente paciente = new Paciente(cpf, nome, dataNascimento, email, senha, sexo, altura, peso, telefone);
 
-
-//                    Intent loadDiagnosticIntent = new Intent(LoginActivity.this,
-//                            LoadDiagnostic.class);
-//                    loadDiagnosticIntent.putExtra("paciente", paciente);
-//
-//                    startActivity(loadDiagnosticIntent);
-
                     Intent loadIncialIntent = new Intent(LoginActivity.this,
                             InicialActivity.class);
+                    loadIncialIntent.putExtra("paciente", paciente);
                     startActivity(loadIncialIntent);
 
                 }

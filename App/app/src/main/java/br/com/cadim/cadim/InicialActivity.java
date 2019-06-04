@@ -9,6 +9,8 @@ import android.widget.ImageButton;
 
 import java.util.Objects;
 
+import br.com.cadim.cadim.Model.Paciente;
+
 public class InicialActivity extends AppCompatActivity {
 
     @Override
@@ -41,7 +43,10 @@ public class InicialActivity extends AppCompatActivity {
         btnDiagnostico.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                System.out.println("Diagnostico");
+                Intent carregarDiagnosticos = new Intent(InicialActivity.this, LoadDiagnostic.class);
+                Paciente paciente = getIntent().getExtras().getParcelable("paciente");
+                carregarDiagnosticos.putExtra("paciente", paciente);
+                startActivity(carregarDiagnosticos);
             }
         });
 
