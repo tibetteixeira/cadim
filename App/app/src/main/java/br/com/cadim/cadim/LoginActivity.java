@@ -42,6 +42,7 @@ public class LoginActivity extends AppCompatActivity {
                 login();
             }
         });
+
     }
 
     private void login() {
@@ -133,4 +134,5 @@ public class LoginActivity extends AppCompatActivity {
             return null;
         }
     }
+
 }

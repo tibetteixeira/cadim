@@ -12,10 +12,11 @@ import retrofit2.http.Body;
 import retrofit2.http.POST;
 
 public class Rest {
-    public static final String BASE_URL = "http://192.168.1.104:8080/";
+    // server to send
+    private static final String BASE_URL = "http://10.101.52.168:8080/";
     private static RetrofitInterface retrofitInterface;
 
-    public static synchronized RetrofitInterface getRetrofit() {
+    static synchronized RetrofitInterface getRetrofit() {
         if (retrofitInterface == null) {
 
             HttpLoggingInterceptor logging = new HttpLoggingInterceptor();

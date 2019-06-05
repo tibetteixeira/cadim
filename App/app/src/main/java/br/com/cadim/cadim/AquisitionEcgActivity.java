@@ -21,6 +21,7 @@ import com.androidplot.xy.XYSeries;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.Objects;
 
 import retrofit2.Call;
@@ -72,6 +73,15 @@ public class AquisitionEcgActivity extends AppCompatActivity {
                 ArrayList<Integer> signalECG = mountSignal(signalECGBuffer);
                 saveSignal(signalECG);
                 message(getApplicationContext(), "Success Saved!!");
+
+                // Convert into String
+                String signalECGStg = "";
+                Iterator i = signalECG.iterator();
+                while(i.hasNext()){
+                    signalECGStg += i.next();
+                }
+                //sending converted signal
+                sendSignal(signalECGStg);
             }
         });
 
@@ -335,8 +345,6 @@ public class AquisitionEcgActivity extends AppCompatActivity {
         super.onStop();
         redrawer.finish();
     }
-
-
 
     private static void sendSignal(String signal) {
         Rest.MSGString m = new Rest.MSGString();
