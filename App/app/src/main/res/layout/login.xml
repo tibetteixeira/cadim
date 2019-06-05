@@ -44,7 +44,9 @@
                 android:layout_marginBottom="@dimen/_20sdp"
                 android:hint="@string/cpf"
                 android:inputType="text"
-                android:text="123"></EditText>
+                android:text="123">
+
+            </EditText>
 
             <EditText
                 android:id="@+id/password"

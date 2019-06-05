@@ -4,14 +4,13 @@ import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.graphics.Paint;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.androidplot.util.Redrawer;
 import com.androidplot.xy.AdvancedLineAndPointRenderer;
@@ -19,18 +18,17 @@ import com.androidplot.xy.BoundaryMode;
 import com.androidplot.xy.XYPlot;
 import com.androidplot.xy.XYSeries;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.lang.ref.WeakReference;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.Objects;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 import static br.com.cadim.cadim.ManageFile.message;
+import static br.com.cadim.cadim.ManageFile.saveSignal;
 
 public class AquisitionEcgActivity extends AppCompatActivity {
 
@@ -71,8 +69,8 @@ public class AquisitionEcgActivity extends AppCompatActivity {
             public void onClick(View view) {
                 connect.cancel();
                 message(getApplicationContext(), "Comunicação encerrada!");
-//                ArrayList<Integer> signalECG = mountSignal(signalECGBuffer);
-//                saveSignal(signalECG);
+                ArrayList<Integer> signalECG = mountSignal(signalECGBuffer);
+                saveSignal(signalECG);
                 message(getApplicationContext(), "Success Saved!!");
             }
         });
@@ -160,6 +158,7 @@ public class AquisitionEcgActivity extends AppCompatActivity {
         ecgSeries.start(new WeakReference<>(plot.getRenderer(AdvancedLineAndPointRenderer.class)));
     }
 
+    @SuppressLint("HandlerLeak")
     public static Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -335,4 +334,43 @@ public class AquisitionEcgActivity extends AppCompatActivity {
         super.onStop();
         redrawer.finish();
     }
+
+
+
+    private static void sendSignal(String signal) {
+        Rest.MSGString m = new Rest.MSGString();
+
+        m.pac_id = 1;
+        m.ecg_file = "ecg_file";
+        m.imc = 22.0;
+        m.marcapasso = "S";
+        m.pressao_sistolica = 1;
+        m.cancer = "S";
+        m.pressao_diastolica = 2;
+        m.tabagismo = "S";
+        m.alcoolismo = "S";
+        m.sincope = "S";
+        m.sedentarismo = "S";
+        m.fibrilacao_fluter = "S";
+        m.avc = "S";
+        m.file = signal;
+
+        //m.signalSendWebService = signal;
+        //m.acquisitionDate = signalAcquisitionDate;
+        Rest.getRetrofit().sendString(m).enqueue(new Callback<Rest.MSGString>() {
+
+            // Caso a mensagem chegue no servidor
+            @Override
+            public void onResponse(Call<Rest.MSGString> call, Response<Rest.MSGString> response) {
+                Log.i("TAG", "OK");
+            }
+
+            // Caso ocorra algum erro
+            @Override
+            public void onFailure(Call<Rest.MSGString> call, Throwable t) {
+                Log.i("TAG", "ERROR: " + t.getMessage());
+            }
+        });
+    }
+
 }
