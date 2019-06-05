@@ -90,7 +90,7 @@ public class AquisitionEcgActivity extends AppCompatActivity {
 
         connect = new ConnectionThread("00:21:13:01:00:71");
         connect.start();
-        plotSignal2();
+//        plotSignal2();
 
         /* Um descanso rápido, para evitar bugs esquisitos.
          */
@@ -184,16 +184,17 @@ public class AquisitionEcgActivity extends AppCompatActivity {
 //                System.out.println(dataString);
                 signalECGBuffer.addAll(new ArrayList<>(Arrays.asList(dataString.split("\n"))));
 
-                if (signalECGBuffer.size() >= 15000) {
-//                    System.out.println();
-                    signalECGTmp = (ArrayList<String>) signalECGBuffer.clone();
-                    signalECGBuffer.clear();
-                    signalECGMount.addAll(mountSignal(signalECGTmp));
-                    ecgSeries.appendSignal(signalECGMount);
-                    signalECGMount.clear();
-//                    plotSignal(signalECGMount, lowerBoundary + 500 * mountIndex, upperBoundary + 500 * mountIndex);
-//                    mountIndex += 1;
-                }
+
+//                if (signalECGBuffer.size() >= 15000) {
+////                    System.out.println();
+//                    signalECGTmp = (ArrayList<String>) signalECGBuffer.clone();
+//                    signalECGBuffer.clear();
+//                    signalECGMount.addAll(mountSignal(signalECGTmp));
+//                    ecgSeries.appendSignal(signalECGMount);
+//                    signalECGMount.clear();
+////                    plotSignal(signalECGMount, lowerBoundary + 500 * mountIndex, upperBoundary + 500 * mountIndex);
+////                    mountIndex += 1;
+//                }
 
             }
         }
