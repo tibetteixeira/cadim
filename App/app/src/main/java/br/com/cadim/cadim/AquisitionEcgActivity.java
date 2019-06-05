@@ -21,14 +21,15 @@ import com.androidplot.xy.XYSeries;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.Objects;
 
+import br.com.cadim.cadim.Model.Paciente;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 import static br.com.cadim.cadim.ManageFile.message;
+import static br.com.cadim.cadim.ManageFile.nowDate;
 import static br.com.cadim.cadim.ManageFile.saveSignal;
 
 public class AquisitionEcgActivity extends AppCompatActivity {
@@ -69,19 +70,16 @@ public class AquisitionEcgActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 connect.cancel();
-                message(getApplicationContext(), "Comunicação encerrada!");
-                ArrayList<Integer> signalECG = mountSignal(signalECGBuffer);
-                saveSignal(signalECG);
-                message(getApplicationContext(), "Success Saved!!");
 
-                // Convert into String
-                String signalECGStg = "";
-                Iterator i = signalECG.iterator();
-                while(i.hasNext()){
-                    signalECGStg += i.next();
-                }
-                //sending converted signal
-                sendSignal(signalECGStg);
+                message(getApplicationContext(), "Comunicação encerrada!");
+
+                ArrayList<Integer> signalECG = mountSignal(signalECGBuffer);
+                Paciente paciente = getIntent().getExtras().getParcelable("paciente");
+
+                saveSignal(signalECG);
+                sendSignal(paciente, signalECG);
+
+                message(getApplicationContext(), "Success Saved!!");
             }
         });
 
@@ -248,7 +246,8 @@ public class AquisitionEcgActivity extends AppCompatActivity {
         private WeakReference<AdvancedLineAndPointRenderer> rendererRef;
 
         /**
-//         * @param signalECG    Array that contains the ECG signal
+         * //         * @param signalECG    Array that contains the ECG signal
+         *
          * @param updateFreqHz Frequency at which new samples are added to the model
          */
         ECGModel(int updateFreqHz) {
@@ -315,7 +314,7 @@ public class AquisitionEcgActivity extends AppCompatActivity {
             System.arraycopy(ECGSignalTemp.toArray(), 0, this.data, dataTemp.length, ECGSignalTemp.size());
         }
 
-        public Number[] getData(){
+        public Number[] getData() {
             return this.data;
         }
 
@@ -346,26 +345,22 @@ public class AquisitionEcgActivity extends AppCompatActivity {
         redrawer.finish();
     }
 
-    private static void sendSignal(String signal) {
+    private static void sendSignal(Paciente paciente, ArrayList<Integer> signal) {
         Rest.MSGString m = new Rest.MSGString();
 
-        m.pac_id = 1;
-        m.ecg_file = "ecg_file";
-        m.imc = 22.0;
-        m.marcapasso = "S";
-        m.pressao_sistolica = 1;
-        m.cancer = "S";
-        m.pressao_diastolica = 2;
-        m.tabagismo = "S";
-        m.alcoolismo = "S";
-        m.sincope = "S";
-        m.sedentarismo = "S";
-        m.fibrilacao_fluter = "S";
-        m.avc = "S";
-        m.file = signal;
+        String signalECG = "";
 
-        //m.signalSendWebService = signal;
-        //m.acquisitionDate = signalAcquisitionDate;
+        for (Integer sample : signal) {
+            signalECG += sample + " ";
+        }
+
+        String cpf = paciente.getCpf();
+        m.cpf = cpf;
+        m.ecgFile = "ECG-" + cpf + "-" + nowDate() + ".txt";
+        m.imc = paciente.getPeso() / Math.pow(paciente.getAltura(), 2);
+        m.dataHora = nowDate();
+        m.signalECG = signalECG;
+
         Rest.getRetrofit().sendString(m).enqueue(new Callback<Rest.MSGString>() {
 
             // Caso a mensagem chegue no servidor

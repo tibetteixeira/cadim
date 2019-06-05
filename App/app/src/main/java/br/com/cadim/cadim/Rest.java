@@ -46,21 +46,11 @@ public class Rest {
     }
 
     public static class MSGString {
-        public int pac_id;
-        public String ecg_file;
-        public Double imc;
-        public String marcapasso;
-        public int pressao_sistolica;
-        public String cancer;
-        public int pressao_diastolica;
-        public String tabagismo;
-        public String alcoolismo;
-        public String sincope;
-        public String sedentarismo;
-        public String fibrilacao_fluter;
-        public String avc;
-        public String file;
-
+        public String cpf;
+        public String ecgFile;
+        public String dataHora;
+        public double imc;
+        public String signalECG;
     }
 
 

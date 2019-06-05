@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class ManageFile {
-    private static String nowDate() {
+    public static String nowDate() {
         @SuppressLint("SimpleDateFormat")
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd-HH_mm_ss");
@@ -64,7 +64,7 @@ public class ManageFile {
             message(null, "Erro FNFE: " + e.getMessage());
 
         } catch (IOException e) {
-            message(null,"Erro IOE: " + e.getMessage());
+            message(null, "Erro IOE: " + e.getMessage());
         }
     }
 
