@@ -49,6 +49,13 @@ if(isset($_GET['apicall'])) {
 			$response['message'] = 'Diagnósticos listados com sucesso';
 			$response['diagnostic'] = $op->getDiagnosticList($_POST['cpf']);
 			break;
+
+		case 'diagnosticEcgList':
+			isTheseParametersAvailable(array('ecgId'));
+			$response['error'] = false;
+			$response['message'] = 'Diagnósticos carregado com sucesso';
+			$response['diagnosticEcg'] = $op->getDiagnosticEcgList($_POST['ecgId']);
+			break;
 	}
 
 } else {
