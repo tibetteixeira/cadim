@@ -1,4 +1,4 @@
-package br.com.cadim.cadim;
+package br.com.cadim.cadim.Controller;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -11,6 +11,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.UUID;
+
+import br.com.cadim.cadim.View.AquisitionEcgActivity;
 
 public class ConnectionThread extends Thread {
 

@@ -1,4 +1,4 @@
-package br.com.cadim.cadim;
+package br.com.cadim.cadim.View;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +10,7 @@ import android.widget.ListView;
 
 import br.com.cadim.cadim.Model.Diagnostico;
 import br.com.cadim.cadim.Model.Paciente;
+import br.com.cadim.cadim.R;
 
 public class DiagnosticActivity extends AppCompatActivity {
     @Override

@@ -1,4 +1,4 @@
-package br.com.cadim.cadim;
+package br.com.cadim.cadim.View;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,16 +9,18 @@ import android.widget.ImageButton;
 
 import java.util.Objects;
 
+import br.com.cadim.cadim.Controller.FoundDevices;
 import br.com.cadim.cadim.Model.Paciente;
+import br.com.cadim.cadim.R;
 
-public class InicialActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity {
     private static final int SELECT_DISCOVERED_DEVICE = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Objects.requireNonNull(getSupportActionBar()).hide();
-        setContentView(R.layout.tela_inicial);
+        setContentView(R.layout.home_screen);
 
         FloatingActionButton btnAddExame = (FloatingActionButton) findViewById(R.id.addExame);
 
@@ -29,7 +31,7 @@ public class InicialActivity extends AppCompatActivity {
         btnAddExame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                  Intent searchDevicesIntent = new Intent(InicialActivity.this, FoundDevices.class);
+                  Intent searchDevicesIntent = new Intent(HomeActivity.this, FoundDevices.class);
                 startActivityForResult(searchDevicesIntent, SELECT_DISCOVERED_DEVICE);
             }
         });
@@ -44,7 +46,7 @@ public class InicialActivity extends AppCompatActivity {
         btnDiagnostico.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent carregarDiagnosticos = new Intent(InicialActivity.this, LoadDiagnostic.class);
+                Intent carregarDiagnosticos = new Intent(HomeActivity.this, LoadDiagnosticActivity.class);
                 Paciente paciente = getIntent().getExtras().getParcelable("paciente");
                 carregarDiagnosticos.putExtra("paciente", paciente);
                 startActivity(carregarDiagnosticos);

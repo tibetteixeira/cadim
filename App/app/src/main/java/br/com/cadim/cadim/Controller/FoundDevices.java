@@ -1,4 +1,4 @@
-package br.com.cadim.cadim;
+package br.com.cadim.cadim.Controller;
 
 import android.Manifest;
 import android.app.ListActivity;
@@ -17,6 +17,9 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import br.com.cadim.cadim.R;
+import br.com.cadim.cadim.View.AquisitionEcgActivity;
 
 public class FoundDevices extends ListActivity {
 

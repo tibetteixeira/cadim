@@ -1,8 +1,7 @@
-package br.com.cadim.cadim;
+package br.com.cadim.cadim.View;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +15,9 @@ import java.util.ArrayList;
 
 import br.com.cadim.cadim.Model.Diagnostico;
 import br.com.cadim.cadim.Model.Paciente;
+import br.com.cadim.cadim.R;
 
-public class ListaDiagnosticoActivity extends AppCompatActivity {
+public class DiagnosticListActivity extends AppCompatActivity {
 
     private static ArrayList<Integer> ecgs;
     private static ArrayList<Integer> diagnosticos;
@@ -31,7 +31,7 @@ public class ListaDiagnosticoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
-        setContentView(R.layout.lista_diagnostico);
+        setContentView(R.layout.diagnostic_list);
 
         diagnosticList = (ListView) findViewById(R.id.diagnostics);
 
@@ -52,7 +52,7 @@ public class ListaDiagnosticoActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Paciente paciente = getIntent().getExtras().getParcelable("paciente");
 
-                Intent inicialIntent = new Intent(ListaDiagnosticoActivity.this, InicialActivity.class);
+                Intent inicialIntent = new Intent(DiagnosticListActivity.this, HomeActivity.class);
                 inicialIntent.putExtra("paciente", paciente);
                 startActivity(inicialIntent);
             }
@@ -70,7 +70,7 @@ public class ListaDiagnosticoActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Diagnostico diagnostico = (Diagnostico) diagnosticList.getAdapter().getItem(position);
 
-                Intent diagnosticIntent = new Intent(ListaDiagnosticoActivity.this, DiagnosticActivity.class);
+                Intent diagnosticIntent = new Intent(DiagnosticListActivity.this, DiagnosticActivity.class);
                 diagnosticIntent.putExtra("diagnostic", diagnostico);
                 startActivity(diagnosticIntent);
             }
@@ -106,7 +106,7 @@ public class ListaDiagnosticoActivity extends AppCompatActivity {
 
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
-            view = getLayoutInflater().inflate(R.layout.custom_list_diagnostico, null);
+            view = getLayoutInflater().inflate(R.layout.custom_diagnostic_list, null);
 
             TextView nome = (TextView) view.findViewById(R.id.nome);
             TextView crm = (TextView) view.findViewById(R.id.crm);

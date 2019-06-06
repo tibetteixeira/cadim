@@ -19,7 +19,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".View.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -27,15 +27,15 @@
         </activity>
 
         <activity
-            android:name=".LoginActivity"
-            android:parentActivityName=".MainActivity"></activity>
+            android:name=".View.LoginActivity"
+            android:parentActivityName=".View.MainActivity"></activity>
 
-        <activity android:name=".ListaDiagnosticoActivity"></activity>
-        <activity android:name=".LoadDiagnostic"></activity>
-        <activity android:name=".AquisitionEcgActivity"></activity>
-        <activity android:name=".InicialActivity"></activity>
-        <activity android:name=".DiagnosticActivity"></activity>
-        <activity android:name=".FoundDevices"></activity>
+        <activity android:name=".View.DiagnosticListActivity"></activity>
+        <activity android:name=".View.LoadDiagnosticActivity"></activity>
+        <activity android:name=".View.AquisitionEcgActivity"></activity>
+        <activity android:name=".View.HomeActivity"></activity>
+        <activity android:name=".View.DiagnosticActivity"></activity>
+        <activity android:name=".Controller.FoundDevices"></activity>
 
     </application>
 

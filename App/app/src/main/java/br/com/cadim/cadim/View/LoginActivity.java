@@ -1,4 +1,4 @@
-package br.com.cadim.cadim;
+package br.com.cadim.cadim.View;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -20,6 +20,7 @@ import java.util.Objects;
 import br.com.cadim.cadim.DAO.Api;
 import br.com.cadim.cadim.DAO.RequestHandler;
 import br.com.cadim.cadim.Model.Paciente;
+import br.com.cadim.cadim.R;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -109,7 +110,7 @@ public class LoginActivity extends AppCompatActivity {
                     Paciente paciente = new Paciente(cpf, nome, dataNascimento, email, senha, sexo, altura, peso, telefone);
 
                     Intent loadIncialIntent = new Intent(LoginActivity.this,
-                            InicialActivity.class);
+                            HomeActivity.class);
                     loadIncialIntent.putExtra("paciente", paciente);
                     startActivity(loadIncialIntent);
 
