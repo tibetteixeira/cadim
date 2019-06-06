@@ -8,7 +8,6 @@ import android.os.Message;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.UUID;
 
@@ -16,13 +15,10 @@ import br.com.cadim.cadim.View.AquisitionEcgActivity;
 
 public class ConnectionThread extends Thread {
 
-    private BluetoothSocket btSocket = null;
-    private InputStream input = null;
-    private OutputStream output = null;
-    private String btDevAddress = null;
-    private String myUUID = "00001101-0000-1000-8000-00805F9B34FB";
-    private boolean running = false;
-    boolean isConnected = false;
+    private BluetoothSocket btSocket;
+    private String btDevAddress;
+    private boolean running;
+    private boolean isConnected;
 
     public ConnectionThread(String btDevAddress) {
 
@@ -37,6 +33,7 @@ public class ConnectionThread extends Thread {
         try {
 
             BluetoothDevice btDevice = btAdapter.getRemoteDevice(btDevAddress);
+            String myUUID = "00001101-0000-1000-8000-00805F9B34FB";
             btSocket = btDevice.createRfcommSocketToServiceRecord(UUID.fromString(myUUID));
 
             btAdapter.cancelDiscovery();
@@ -56,13 +53,12 @@ public class ConnectionThread extends Thread {
 
             /*  código informando que a conexão ocorreu com sucesso
              */
-            this.isConnected = true;
+            isConnected = true;
             toAquisitionEcgActivity("---S".getBytes());
 
             try {
 
-                input = btSocket.getInputStream();
-                output = btSocket.getOutputStream();
+                InputStream input = btSocket.getInputStream();
 
                 while (running) {
 
@@ -79,9 +75,7 @@ public class ConnectionThread extends Thread {
                         bytesRead += bytes;
                     } while (buffer[bytesRead] != '\n');
 
-
                     toAquisitionEcgActivity(Arrays.copyOfRange(buffer, 0, bytesRead - 1));
-
                 }
 
             } catch (IOException e) {
@@ -89,7 +83,7 @@ public class ConnectionThread extends Thread {
                  */
                 e.printStackTrace();
                 toAquisitionEcgActivity("---N".getBytes());
-                this.isConnected = false;
+                isConnected = false;
             }
         }
 
@@ -113,16 +107,15 @@ public class ConnectionThread extends Thread {
     public void cancel() {
 
         try {
-
             running = false;
-            this.isConnected = false;
+            isConnected = false;
             btSocket.close();
 
         } catch (IOException e) {
             e.printStackTrace();
         }
         running = false;
-        this.isConnected = false;
+        isConnected = false;
     }
 
 }

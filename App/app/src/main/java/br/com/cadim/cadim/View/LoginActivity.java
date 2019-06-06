@@ -95,7 +95,8 @@ public class LoginActivity extends AppCompatActivity {
 
                 this.object = new JSONObject(s);
                 if (!object.getBoolean("error")) {
-                    Toast.makeText(getApplicationContext(), "Login realizado com sucesso", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Login realizado com sucesso",
+                            Toast.LENGTH_SHORT).show();
 
                     String cpf = ((JSONObject) object.get("login")).getString("cpf");
                     String nome = ((JSONObject) object.get("login")).getString("nome");

@@ -1,5 +1,6 @@
 package br.com.cadim.cadim.View;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -52,7 +53,8 @@ public class DiagnosticListActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Paciente paciente = getIntent().getExtras().getParcelable("paciente");
 
-                Intent inicialIntent = new Intent(DiagnosticListActivity.this, HomeActivity.class);
+                Intent inicialIntent = new Intent(DiagnosticListActivity.this,
+                        HomeActivity.class);
                 inicialIntent.putExtra("paciente", paciente);
                 startActivity(inicialIntent);
             }
@@ -68,9 +70,11 @@ public class DiagnosticListActivity extends AppCompatActivity {
         diagnosticList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Diagnostico diagnostico = (Diagnostico) diagnosticList.getAdapter().getItem(position);
+                Diagnostico diagnostico = (Diagnostico) diagnosticList.getAdapter()
+                        .getItem(position);
 
-                Intent diagnosticIntent = new Intent(DiagnosticListActivity.this, DiagnosticActivity.class);
+                Intent diagnosticIntent = new Intent(DiagnosticListActivity.this,
+                        DiagnosticActivity.class);
                 diagnosticIntent.putExtra("diagnostic", diagnostico);
                 startActivity(diagnosticIntent);
             }
@@ -104,6 +108,7 @@ public class DiagnosticListActivity extends AppCompatActivity {
             return 0;
         }
 
+        @SuppressLint({"ViewHolder", "InflateParams", "SetTextI18n"})
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
             view = getLayoutInflater().inflate(R.layout.custom_diagnostic_list, null);

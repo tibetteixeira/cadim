@@ -56,9 +56,10 @@ public class FoundDevices extends ListActivity {
 
         String item = (String) getListAdapter().getItem(position - 1);
         String btName = item.substring(0, item.indexOf("\n"));
-        String btAddress = item.substring(item.indexOf("\n") + 1, item.length());
+        String btAddress = item.substring(item.indexOf("\n") + 1);
 
-        Intent returnIntent = new Intent(FoundDevices.this, AquisitionEcgActivity.class);
+        Intent returnIntent = new Intent(FoundDevices.this,
+                AquisitionEcgActivity.class);
         returnIntent.putExtra("btName", btName);
         returnIntent.putExtra("btAddress", btAddress);
         startActivity(returnIntent);

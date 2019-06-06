@@ -31,7 +31,8 @@ public class HomeActivity extends AppCompatActivity {
         btnAddExame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                  Intent searchDevicesIntent = new Intent(HomeActivity.this, FoundDevices.class);
+                  Intent searchDevicesIntent = new Intent(HomeActivity.this,
+                          FoundDevices.class);
                 startActivityForResult(searchDevicesIntent, SELECT_DISCOVERED_DEVICE);
             }
         });
@@ -46,7 +47,8 @@ public class HomeActivity extends AppCompatActivity {
         btnDiagnostico.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent carregarDiagnosticos = new Intent(HomeActivity.this, LoadDiagnosticActivity.class);
+                Intent carregarDiagnosticos = new Intent(HomeActivity.this,
+                        LoadDiagnosticActivity.class);
                 Paciente paciente = getIntent().getExtras().getParcelable("paciente");
                 carregarDiagnosticos.putExtra("paciente", paciente);
                 startActivity(carregarDiagnosticos);

@@ -51,7 +51,8 @@ public class LoadDiagnosticActivity extends AppCompatActivity {
         HashMap<String, String> params = new HashMap<>();
         params.put("cpf", cpf);
 
-        PerformNetworkRequest request = new PerformNetworkRequest(Api.URL_DIAGNOSTICLIST, params, CODE_POST_REQUEST);
+        PerformNetworkRequest request = new PerformNetworkRequest(Api.URL_DIAGNOSTICLIST,
+                params, CODE_POST_REQUEST);
         request.execute();
     }
 
