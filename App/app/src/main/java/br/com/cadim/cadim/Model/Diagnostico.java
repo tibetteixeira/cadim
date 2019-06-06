@@ -20,7 +20,7 @@ public class Diagnostico implements Parcelable {
         this.dataHora = dataHora;
     }
 
-    protected Diagnostico(Parcel in) {
+    private Diagnostico(Parcel in) {
         diagnosticoId = in.readInt();
         ecgId = in.readInt();
         descricao = in.readString();

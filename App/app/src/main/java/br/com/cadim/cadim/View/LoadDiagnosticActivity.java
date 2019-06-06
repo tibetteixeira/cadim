@@ -1,4 +1,4 @@
-package br.com.cadim.cadim;
+package br.com.cadim.cadim.View;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -17,10 +17,11 @@ import java.util.Objects;
 import br.com.cadim.cadim.DAO.Api;
 import br.com.cadim.cadim.DAO.RequestHandler;
 import br.com.cadim.cadim.Model.Paciente;
+import br.com.cadim.cadim.R;
 
-import static br.com.cadim.cadim.MainActivity.CODE_POST_REQUEST;
+import static br.com.cadim.cadim.View.MainActivity.CODE_POST_REQUEST;
 
-public class LoadDiagnostic extends AppCompatActivity {
+public class LoadDiagnosticActivity extends AppCompatActivity {
 
     private static ArrayList<Integer> ecgs;
     private static ArrayList<Integer> diagnosticos;
@@ -33,7 +34,7 @@ public class LoadDiagnostic extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Objects.requireNonNull(getSupportActionBar()).hide();
-        setContentView(R.layout.loading_diagnostic);
+        setContentView(R.layout.load_diagnostic);
 
         ecgs = new ArrayList<>();
         diagnosticos = new ArrayList<>();
@@ -50,7 +51,8 @@ public class LoadDiagnostic extends AppCompatActivity {
         HashMap<String, String> params = new HashMap<>();
         params.put("cpf", cpf);
 
-        PerformNetworkRequest request = new PerformNetworkRequest(Api.URL_DIAGNOSTICLIST, params, CODE_POST_REQUEST);
+        PerformNetworkRequest request = new PerformNetworkRequest(Api.URL_DIAGNOSTICLIST,
+                params, CODE_POST_REQUEST);
         request.execute();
     }
 
@@ -93,8 +95,8 @@ public class LoadDiagnostic extends AppCompatActivity {
 
                     Paciente paciente = getIntent().getExtras().getParcelable("paciente");
 
-                    Intent listDiagnosticIntent = new Intent(LoadDiagnostic.this,
-                            ListaDiagnosticoActivity.class);
+                    Intent listDiagnosticIntent = new Intent(LoadDiagnosticActivity.this,
+                            DiagnosticListActivity.class);
 
                     listDiagnosticIntent.putExtra("ecgs", ecgs);
                     listDiagnosticIntent.putExtra("diagnosticos", diagnosticos);

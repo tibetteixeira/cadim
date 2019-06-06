@@ -14,7 +14,9 @@ public class Paciente implements Parcelable {
     private double peso;
     private int telefone;
 
-    public Paciente(String cpf, String nome, String dataNascimento, String email, String senha, String sexo, int altura, double peso, int telefone) {
+    public Paciente(String cpf, String nome, String dataNascimento,
+                    String email, String senha, String sexo,
+                    int altura, double peso, int telefone) {
         this.cpf = cpf;
         this.nome = nome;
         this.dataNascimento = dataNascimento;

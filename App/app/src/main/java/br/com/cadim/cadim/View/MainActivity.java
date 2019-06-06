@@ -1,4 +1,4 @@
-package br.com.cadim.cadim;
+package br.com.cadim.cadim.View;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -9,6 +9,8 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+
+import br.com.cadim.cadim.R;
 
 public class MainActivity extends AppCompatActivity {
     public static final int CODE_GET_REQUEST = 1024;

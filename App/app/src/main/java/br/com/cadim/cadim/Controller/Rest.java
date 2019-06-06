@@ -1,4 +1,4 @@
-package br.com.cadim.cadim;
+package br.com.cadim.cadim.Controller;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -16,7 +16,7 @@ public class Rest {
     private static final String BASE_URL = "http://10.101.52.168:8080/";
     private static RetrofitInterface retrofitInterface;
 
-    static synchronized RetrofitInterface getRetrofit() {
+    public static synchronized RetrofitInterface getRetrofit() {
         if (retrofitInterface == null) {
 
             HttpLoggingInterceptor logging = new HttpLoggingInterceptor();

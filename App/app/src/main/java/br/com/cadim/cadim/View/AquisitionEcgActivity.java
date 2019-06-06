@@ -1,4 +1,4 @@
-package br.com.cadim.cadim;
+package br.com.cadim.cadim.View;
 
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
@@ -23,14 +23,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 
+import br.com.cadim.cadim.Controller.ConnectionThread;
 import br.com.cadim.cadim.Model.Paciente;
+import br.com.cadim.cadim.R;
+import br.com.cadim.cadim.Controller.Rest;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static br.com.cadim.cadim.ManageFile.message;
-import static br.com.cadim.cadim.ManageFile.nowDate;
-import static br.com.cadim.cadim.ManageFile.saveSignal;
+import static br.com.cadim.cadim.Controller.ManageFile.message;
+import static br.com.cadim.cadim.Controller.ManageFile.nowDate;
+import static br.com.cadim.cadim.Controller.ManageFile.saveSignal;
 
 public class AquisitionEcgActivity extends AppCompatActivity {
 
