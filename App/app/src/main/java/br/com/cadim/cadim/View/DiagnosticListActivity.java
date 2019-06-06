@@ -120,7 +120,7 @@ public class DiagnosticListActivity extends AppCompatActivity {
 
             nome.setText(nomes.get(i));
             crm.setText("CRM: " + crms.get(i));
-            descricao.setText(descricoes.get(i));
+            descricao.setText(descricoes.get(i).substring(0, 150) + "...");
             data_hora.setText(datas_horas.get(i));
 
             return view;
