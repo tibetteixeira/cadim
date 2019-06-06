@@ -92,6 +92,37 @@ Class DbOperation {
 
 		return $diagnosticos; 
 	}
+
+	function getDiagnosticEcgList($ecgId) {
+		try {	
+			$stmt = $this->pdo->prepare("SELECT d_diagnostico_id, d_crm, d_ecg_id, 
+										d_descricao, d_data_hora_diagnostico, m_nome
+										FROM ecg
+										INNER JOIN diagnostico on (d_ecg_id = e_ecg_id)
+										INNER JOIN medico on (d_crm = m_crm)
+										WHERE e_ecg_id = ?
+										ORDER BY d_data_hora_diagnostico DESC
+										LIMIT 1");
+			$stmt->bindValue(1, $ecgId);
+			$stmt->execute();
+
+			$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+			$diagnosticoEcg = array();
+			foreach ($result as $field) {
+				$diagnosticoEcg['diagnostico_id'] = $field['d_diagnostico_id'];
+				$diagnosticoEcg['ecg_id'] = $field['d_ecg_id'];
+				$diagnosticoEcg['crm'] = $field['d_crm'];
+				$diagnosticoEcg['descricao'] = $field['d_descricao'];
+				$diagnosticoEcg['data_hora_diagnostico'] = $field['d_data_hora_diagnostico'];
+				$diagnosticoEcg['nome'] = $field['m_nome'];
+			}
+
+		} catch(PDOException $e) {
+				print "Erro: " . $e->getMessage();   
+		}
+
+		return $diagnosticoEcg; 
+	}
 	
 }
 
