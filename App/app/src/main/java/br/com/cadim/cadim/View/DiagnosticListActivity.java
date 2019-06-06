@@ -120,7 +120,11 @@ public class DiagnosticListActivity extends AppCompatActivity {
 
             nome.setText(nomes.get(i));
             crm.setText("CRM: " + crms.get(i));
-            descricao.setText(descricoes.get(i).substring(0, 150) + "...");
+            int tamanhoDescricao = descricoes.get(i).length();
+            if (tamanhoDescricao >= 150)
+                descricao.setText(descricoes.get(i).substring(0, 150) + "...");
+            else
+                descricao.setText(descricoes.get(i).substring(0, tamanhoDescricao));
             data_hora.setText(datas_horas.get(i));
 
             return view;
