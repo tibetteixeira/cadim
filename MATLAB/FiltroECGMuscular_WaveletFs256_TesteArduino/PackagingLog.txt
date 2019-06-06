@@ -1,0 +1,22 @@
+ant:
+<ant>
+  <mkdir dir="C:\projetos\ecgmobile\MATLAB\FiltroECGMuscular_WaveletFs256_TesteArduino\for_redistribution" />
+  <mkdir dir="C:\projetos\ecgmobile\MATLAB\FiltroECGMuscular_WaveletFs256_TesteArduino\for_testing" />
+  <mkdir dir="C:\projetos\ecgmobile\MATLAB\FiltroECGMuscular_WaveletFs256_TesteArduino\for_redistribution_files_only" />
+</ant>
+mcc -C -o FiltroECGMuscular_WaveletFs256_TesteArduino -W WinMain:FiltroECGMuscular_WaveletFs256_TesteArduino -T link:exe -d C:\projetos\ecgmobile\MATLAB\FiltroECGMuscular_WaveletFs256_TesteArduino\for_testing -v C:\projetos\ecgmobile\MATLAB\FiltroECGMuscular_WaveletFs256_TesteArduino.m 
+Compiler version: 6.0 (R2015a)
+Dependency analysis by REQUIREMENTS.
+[Warning: Adding path "C:\projetos\ecgmobile\MATLAB" to Compiler path instance.] 
+Parsing file "C:\projetos\ecgmobile\MATLAB\FiltroECGMuscular_WaveletFs256_TesteArduino.m"
+	(Referenced from: "Compiler Command Line").
+Deleting 0 temporary MEX authorization files.
+Generating file "C:\projetos\ecgmobile\MATLAB\FiltroECGMuscular_WaveletFs256_TesteArduino\for_testing\readme.txt".
+Packaging...
+Adding custom icon C:\Program Files\MATLAB\MATLAB Production Server\R2015a\toolbox\compiler\Resources\default_icon.ico to C:\projetos\ecgmobile\MATLAB\FiltroECGMuscular_WaveletFs256_TesteArduino\for_testing\FiltroECGMuscular_WaveletFs256_TesteArduino.exe.
+Attempting to embed the CTF archive into the application C:\projetos\ecgmobile\MATLAB\FiltroECGMuscular_WaveletFs256_TesteArduino\for_testing\FiltroECGMuscular_WaveletFs256_TesteArduino.exe.
+Finished embedding CTF archive. Deleting the external CTF archive.
+Creating the bundle...
+Web based installer created at C:\projetos\ecgmobile\MATLAB\FiltroECGMuscular_WaveletFs256_TesteArduino\for_redistribution\MyAppInstaller_web.exe.
+Packaging complete.
+Elapsed packaging time was: 1 minutes and 27 seconds.
