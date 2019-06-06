@@ -118,7 +118,7 @@ public class DiagnosticListActivity extends AppCompatActivity {
             TextView descricao = (TextView) view.findViewById(R.id.descricao);
             TextView data_hora = (TextView) view.findViewById(R.id.data_hora);
 
-            nome.setText(nomes.get(i));
+            nome.setText("Dr. " + nomes.get(i));
             crm.setText("CRM: " + crms.get(i));
             int tamanhoDescricao = descricoes.get(i).length();
             if (tamanhoDescricao >= 150)

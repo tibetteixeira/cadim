@@ -1,5 +1,6 @@
 package br.com.cadim.cadim.View;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
@@ -8,6 +9,7 @@ import br.com.cadim.cadim.Model.Diagnostico;
 import br.com.cadim.cadim.R;
 
 public class DiagnosticActivity extends AppCompatActivity {
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,7 +23,7 @@ public class DiagnosticActivity extends AppCompatActivity {
         TextView descricao = (TextView) findViewById(R.id.descricao);
         TextView data_hora = (TextView) findViewById(R.id.data_hora);
 
-        nome.setText(diagnostico.getNomeMedico());
+        nome.setText("Dr. " + diagnostico.getNomeMedico());
         crm.setText(diagnostico.getCrm());
         descricao.setText(diagnostico.getDescricao());
         data_hora.setText(diagnostico.getDataHora());
