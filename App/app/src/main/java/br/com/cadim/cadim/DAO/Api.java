@@ -6,6 +6,7 @@ public class Api {
 
     public static final String URL_LOGIN = ROOT_URL + "login";
     public static final String URL_DIAGNOSTICLIST = ROOT_URL + "diagnosticList";
+    public static final String URL_DIAGNOSTIC_ECG_LIST = ROOT_URL + "diagnosticEcgList";
 
 
 }
