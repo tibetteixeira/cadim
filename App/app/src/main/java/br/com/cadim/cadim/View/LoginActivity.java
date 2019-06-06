@@ -11,14 +11,17 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 
 import br.com.cadim.cadim.DAO.Api;
 import br.com.cadim.cadim.DAO.RequestHandler;
+import br.com.cadim.cadim.Model.Ecg;
 import br.com.cadim.cadim.Model.Paciente;
 import br.com.cadim.cadim.R;
 
@@ -91,6 +94,10 @@ public class LoginActivity extends AppCompatActivity {
             super.onPostExecute(s);
 
             try {
+
+                Intent loadIncialIntent = new Intent(LoginActivity.this,
+                        HomeActivity.class);
+
                 System.out.println(s);
 
                 this.object = new JSONObject(s);
@@ -107,12 +114,31 @@ public class LoginActivity extends AppCompatActivity {
                     int altura = ((JSONObject) object.get("login")).getInt("altura");
                     double peso = ((JSONObject) object.get("login")).getDouble("peso");
                     int telefone = ((JSONObject) object.get("login")).getInt("telefone");
+                    JSONArray ecgArray = ((JSONObject) object.get("login")).getJSONArray("ecg");
+
+                    ArrayList<Ecg> ecgTodayList = new ArrayList<>();
+                    JSONObject ecg;
+
+                    if (!(((JSONObject) ecgArray.get(0)).getString("data_hora").equals("null"))) {
+                        for (int i = 0; i < ecgArray.length(); i++) {
+                            ecg = (JSONObject) ecgArray.get(i);
+
+                            ecgTodayList.add(
+                                    new Ecg(Integer.parseInt(ecg.getString("ecg_id")),
+                                            ecg.getString("ecg_file"),
+                                            cpf,
+                                            ecg.getString("data_hora"),
+                                            Double.parseDouble(ecg.getString("imc"))));
+                        }
+                        loadIncialIntent.putParcelableArrayListExtra("listaEcg", ecgTodayList);
+                    }
+                    else {
+                        loadIncialIntent.putParcelableArrayListExtra("listaEcg", null);
+                    }
 
                     Paciente paciente = new Paciente(cpf, nome, dataNascimento, email, senha, sexo, altura, peso, telefone);
-
-                    Intent loadIncialIntent = new Intent(LoginActivity.this,
-                            HomeActivity.class);
                     loadIncialIntent.putExtra("paciente", paciente);
+
                     startActivity(loadIncialIntent);
 
                 }

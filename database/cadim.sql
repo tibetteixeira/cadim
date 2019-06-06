@@ -44,7 +44,7 @@ CREATE TABLE `diagnostico` (
 
 CREATE TABLE `ecg` (
   `e_ecg_id` int(11) NOT NULL,
-  `e_paciente_cpf` varchar(11) NOT NULL,
+  `e_paciente_cpf` varchar(255) NOT NULL,
   `e_ecg_file` varchar(100) NOT NULL,
   `e_imc` decimal(4, 2) DEFAULT NULL,
   `e_data_hora` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -70,11 +70,11 @@ CREATE TABLE `ecg_remedio` (
 
 CREATE TABLE `medico` (
   `m_crm` varchar(10) NOT NULL,
-  `m_cpf` varchar(11) NOT NULL,
+  `m_cpf` varchar(255) NOT NULL,
   `m_nome` varchar(100) NOT NULL,
   `m_data_nasc` date NOT NULL,
   `m_email` varchar(50) NOT NULL,
-  `m_senha` varchar(20) NOT NULL,
+  `m_senha` varchar(255) NOT NULL,
   `m_sexo` varchar(1) NOT NULL,
   `m_telefone` int(11) NOT NULL
 );
@@ -86,11 +86,11 @@ CREATE TABLE `medico` (
 --
 
 CREATE TABLE `paciente` (
-  `p_cpf` varchar(11) NOT NULL,
+  `p_cpf` varchar(255) NOT NULL,
   `p_nome` varchar(100) NOT NULL,
   `p_data_nasc` date DEFAULT NULL,
   `p_email` varchar(50) NOT NULL,
-  `p_senha` varchar(20) NOT NULL,
+  `p_senha` varchar(255) NOT NULL,
   `p_sexo` varchar(1) DEFAULT NULL,
   `p_altura` smallint DEFAULT NULL,
   `p_peso` decimal(5, 2) NOT NULL,
@@ -115,7 +115,7 @@ CREATE TABLE `remedio` (
 --
 
 CREATE TABLE `remedio_paciente` (
-  `rp_paciente_cpf` varchar(11) NOT NULL,
+  `rp_paciente_cpf` varchar(255) NOT NULL,
   `rp_rem_id` int(11) NOT NULL,
   `rp_dosagem` float NOT NULL
 );
@@ -283,32 +283,32 @@ ALTER TABLE `remedio_paciente`
 
 -- Paciente
 
-INSERT INTO paciente (p_cpf, p_nome, p_data_nasc, p_email, p_senha, p_sexo, p_altura, p_peso, p_telefone) VALUES ('123', 'tibet', '1999-03-03', 'tibet@gmail.com', '123', 'M', 170, 72, '859123456789');
+INSERT INTO paciente (p_cpf, p_nome, p_data_nasc, p_email, p_senha, p_sexo, p_altura, p_peso, p_telefone) VALUES (md5('123'), 'tibet', '1999-03-03', 'tibet@gmail.com', md5('123'), 'M', 170, 72, '859123456789');
 
-INSERT INTO paciente (p_cpf, p_nome, p_data_nasc, p_email, p_senha, p_sexo, p_altura, p_peso, p_telefone) VALUES ('456', 'franklyn', '1999-03-03', 'franklyn@gmail.com', '456', 'M', 170, 72, '859123456789');
+INSERT INTO paciente (p_cpf, p_nome, p_data_nasc, p_email, p_senha, p_sexo, p_altura, p_peso, p_telefone) VALUES (md5('456'), 'franklyn', '1999-03-03', 'franklyn@gmail.com', md5('456'), 'M', 170, 72, '859123456789');
 
-INSERT INTO paciente (p_cpf, p_nome, p_data_nasc, p_email, p_senha, p_sexo, p_altura, p_peso, p_telefone) VALUES ('789', 'daniel', '1999-03-03', 'daniel@gmail.com', '789', 'M', 170, 72, '859123456789');
+INSERT INTO paciente (p_cpf, p_nome, p_data_nasc, p_email, p_senha, p_sexo, p_altura, p_peso, p_telefone) VALUES (md5('789'), 'daniel', '1999-03-03', 'daniel@gmail.com', md5('789'), 'M', 170, 72, '859123456789');
 
-INSERT INTO paciente (p_cpf, p_nome, p_data_nasc, p_email, p_senha, p_sexo, p_altura, p_peso, p_telefone) VALUES ('120', 'abner', '1999-03-03', 'abner@gmail.com', '120', 'M', 170, 72, '859123456789');
+INSERT INTO paciente (p_cpf, p_nome, p_data_nasc, p_email, p_senha, p_sexo, p_altura, p_peso, p_telefone) VALUES (md5('120'), 'abner', '1999-03-03', 'abner@gmail.com', md5('120'), 'M', 170, 72, '859123456789');
 
 -- Médico
 
-INSERT INTO medico (m_crm, m_cpf, m_nome, m_data_nasc, m_email, m_senha, m_sexo, m_telefone) VALUES ('M120', '120', 'Dr abner', '1999-03-03', 'abner@gmail.com', '120', 'M', '859123456789');
-INSERT INTO medico (m_crm, m_cpf, m_nome, m_data_nasc, m_email, m_senha, m_sexo, m_telefone) VALUES ('M123', '123', 'Dr tibet', '1999-03-03', 'tibet@gmail.com', '123', 'M', '859123456789');
+INSERT INTO medico (m_crm, m_cpf, m_nome, m_data_nasc, m_email, m_senha, m_sexo, m_telefone) VALUES ('M120', md5('120'), 'Dr abner', '1999-03-03', 'abner@gmail.com', md5('120'), 'M', '859123456789');
+INSERT INTO medico (m_crm, m_cpf, m_nome, m_data_nasc, m_email, m_senha, m_sexo, m_telefone) VALUES ('M123', md5('123'), 'Dr tibet', '1999-03-03', 'tibet@gmail.com', md5('123'), 'M', '859123456789');
 
 -- ECG
 
-INSERT INTO ecg (e_ecg_id, e_paciente_cpf, e_ecg_file, e_imc, e_data_hora) VALUES (1, '123', 'test1', NULL, '2019-05-17 00:21');
-INSERT INTO ecg (e_ecg_id, e_paciente_cpf, e_ecg_file, e_imc, e_data_hora) VALUES (2, '123', 'test2', NULL, '2019-05-18 00:23');
-INSERT INTO ecg (e_ecg_id, e_paciente_cpf, e_ecg_file, e_imc, e_data_hora) VALUES (3, '123', 'test3', NULL, '2019-05-19 00:25');
-INSERT INTO ecg (e_ecg_id, e_paciente_cpf, e_ecg_file, e_imc, e_data_hora) VALUES (4, '123', 'test4', NULL, '2019-05-20 00:29');
-INSERT INTO ecg (e_ecg_id, e_paciente_cpf, e_ecg_file, e_imc, e_data_hora) VALUES (5, '123', 'test5', NULL, '2019-05-21 00:31');
-INSERT INTO ecg (e_ecg_id, e_paciente_cpf, e_ecg_file, e_imc, e_data_hora) VALUES (6, '123', 'test6', NULL, '2019-05-22 00:33');
-INSERT INTO ecg (e_ecg_id, e_paciente_cpf, e_ecg_file, e_imc, e_data_hora) VALUES (8, '456', 'test8', NULL, '2019-05-23 00:37');
-INSERT INTO ecg (e_ecg_id, e_paciente_cpf, e_ecg_file, e_imc, e_data_hora) VALUES (7, '456', 'test7', NULL, '2019-05-24 00:36');
-INSERT INTO ecg (e_ecg_id, e_paciente_cpf, e_ecg_file, e_imc, e_data_hora) VALUES (9, '789', 'test9', NULL, '2019-05-25 00:50');
-INSERT INTO ecg (e_ecg_id, e_paciente_cpf, e_ecg_file, e_imc, e_data_hora) VALUES (10, '789', 'test10', NULL, '2019-05-26 00:55');
-INSERT INTO ecg (e_ecg_id, e_paciente_cpf, e_ecg_file, e_imc, e_data_hora) VALUES (11, '789', 'test11', NULL, '2019-05-27 00:50');
+INSERT INTO ecg (e_ecg_id, e_paciente_cpf, e_ecg_file, e_imc, e_data_hora) VALUES (1, md5('123'), 'test1', NULL, '2019-05-17 00:21');
+INSERT INTO ecg (e_ecg_id, e_paciente_cpf, e_ecg_file, e_imc, e_data_hora) VALUES (2, md5('123'), 'test2', NULL, '2019-05-18 00:23');
+INSERT INTO ecg (e_ecg_id, e_paciente_cpf, e_ecg_file, e_imc, e_data_hora) VALUES (3, md5('123'), 'test3', NULL, '2019-05-19 00:25');
+INSERT INTO ecg (e_ecg_id, e_paciente_cpf, e_ecg_file, e_imc, e_data_hora) VALUES (4, md5('123'), 'test4', NULL, '2019-05-20 00:29');
+INSERT INTO ecg (e_ecg_id, e_paciente_cpf, e_ecg_file, e_imc, e_data_hora) VALUES (5, md5('123'), 'test5', NULL, '2019-05-21 00:31');
+INSERT INTO ecg (e_ecg_id, e_paciente_cpf, e_ecg_file, e_imc, e_data_hora) VALUES (6, md5('123'), 'test6', NULL, '2019-05-22 00:33');
+INSERT INTO ecg (e_ecg_id, e_paciente_cpf, e_ecg_file, e_imc, e_data_hora) VALUES (8, md5('456'), 'test8', NULL, '2019-05-23 00:37');
+INSERT INTO ecg (e_ecg_id, e_paciente_cpf, e_ecg_file, e_imc, e_data_hora) VALUES (7, md5('456'), 'test7', NULL, '2019-05-24 00:36');
+INSERT INTO ecg (e_ecg_id, e_paciente_cpf, e_ecg_file, e_imc, e_data_hora) VALUES (9, md5('789'), 'test9', NULL, '2019-05-25 00:50');
+INSERT INTO ecg (e_ecg_id, e_paciente_cpf, e_ecg_file, e_imc, e_data_hora) VALUES (10, md5('789'), 'test10', NULL, '2019-05-26 00:55');
+INSERT INTO ecg (e_ecg_id, e_paciente_cpf, e_ecg_file, e_imc, e_data_hora) VALUES (11, md5('789'), 'test11', NULL, '2019-05-27 00:50');
 
 -- Diagnostico
 

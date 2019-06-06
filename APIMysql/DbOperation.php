@@ -19,14 +19,22 @@ Class DbOperation {
 
 	function login($cpf, $senha) {
 		try {	
-			$stmt = $this->pdo->prepare("SELECT p_cpf, p_nome, p_data_nasc, p_email, p_senha, p_sexo, p_altura, p_peso, p_telefone FROM paciente WHERE p_cpf = ? and p_senha = ? ");
+			$stmt = $this->pdo->prepare("SELECT p_cpf, p_nome, p_data_nasc, p_email, p_senha, p_sexo, p_altura, p_peso, p_telefone,
+											e_ecg_id, e_ecg_file, e_imc, e_data_hora
+										FROM paciente 
+										LEFT OUTER JOIN ecg ON (p_cpf = e_paciente_cpf and date(e_data_hora) = CURRENT_DATE)
+										WHERE p_cpf = md5(?) and p_senha = md5(?) 
+										ORDER BY e_data_hora DESC");
 			$stmt->bindValue(1, $cpf);
 			$stmt->bindValue(2, $senha);
 			$stmt->execute();
 
 			$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+			$paciente = array();
+			$todayEcg = array();
 			foreach ($result as $field) {
-				$paciente = array();
+				$ecg = array();
+
 				$paciente['cpf'] = $field['p_cpf'];
 				$paciente['nome'] = $field['p_nome'];
 				$paciente['data_nasc'] = $field['p_data_nasc'];
@@ -36,7 +44,14 @@ Class DbOperation {
 				$paciente['altura'] = $field['p_altura'];
 				$paciente['peso'] = $field['p_peso'];
 				$paciente['telefone'] = $field['p_telefone'];
+				$ecg['ecg_id'] = $field['e_ecg_id'];
+				$ecg['ecg_file'] = $field['e_ecg_file'];
+				$ecg['imc'] = $field['e_imc'];
+				$ecg['data_hora'] = $field['e_data_hora'];
+
+				array_push($todayEcg, $ecg);
 			}
+			$paciente['ecg'] = $todayEcg;
 
 		} catch(PDOException $e) {
 				print "Erro: " . $e->getMessage();   
