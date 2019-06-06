@@ -12,6 +12,7 @@ import java.util.Objects;
 import br.com.cadim.cadim.Model.Paciente;
 
 public class InicialActivity extends AppCompatActivity {
+    private static final int SELECT_DISCOVERED_DEVICE = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,8 +29,8 @@ public class InicialActivity extends AppCompatActivity {
         btnAddExame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent realizarExameIntent = new Intent(InicialActivity.this, AquisitionEcgActivity.class);
-                startActivity(realizarExameIntent);
+                  Intent searchDevicesIntent = new Intent(InicialActivity.this, FoundDevices.class);
+                startActivityForResult(searchDevicesIntent, SELECT_DISCOVERED_DEVICE);
             }
         });
 

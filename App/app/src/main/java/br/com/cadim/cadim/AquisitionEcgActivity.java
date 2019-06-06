@@ -94,9 +94,12 @@ public class AquisitionEcgActivity extends AppCompatActivity {
             System.out.println("Ótimo! Hardware Bluetooth está funcionando :)");
         }
 
+        String btName = getIntent().getExtras().getString("btName");
+        String btAddress = getIntent().getExtras().getString("btAddress");
+
         btAdapter.enable();
 
-        connect = new ConnectionThread("00:21:13:01:00:71");
+        connect = new ConnectionThread(btAddress);
         connect.start();
 //        plotSignal2();
 
@@ -189,7 +192,7 @@ public class AquisitionEcgActivity extends AppCompatActivity {
             else if (dataString.equals("---S"))
                 System.out.println("Conectado :D");
             else {
-//                System.out.println(dataString);
+                System.out.println(dataString);
                 signalECGBuffer.addAll(new ArrayList<>(Arrays.asList(dataString.split("\n"))));
 
 
