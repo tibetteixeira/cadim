@@ -52,7 +52,8 @@ Class DbOperation {
 										INNER JOIN paciente ON (p_cpf = e_paciente_cpf) 
 										INNER JOIN diagnostico ON (d_ecg_id = e_ecg_id)
 										INNER JOIN medico ON (d_crm = m_crm)
-										WHERE p_cpf = ?");
+										WHERE p_cpf = ?
+										ORDER BY d_data_hora_diagnostico DESC");
 			$stmt->bindValue(1, $cpf);
 			$stmt->execute();
 
