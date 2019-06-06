@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="br.com.cadim.cadim.View.HomeActivity">
+
+    <item
+        android:id="@+id/downloadExam"
+        android:orderInCategory="100"
+        android:title="Baixar e visualizar"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/showDiagnostic"
+        android:orderInCategory="100"
+        android:title="Diagnóstico"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/showInfor"
+        android:orderInCategory="100"
+        android:title="Informações"
+        app:showAsAction="never" />
+</menu>
