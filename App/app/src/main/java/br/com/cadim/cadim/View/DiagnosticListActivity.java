@@ -1,6 +1,8 @@
 package br.com.cadim.cadim.View;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -35,6 +37,12 @@ public class DiagnosticListActivity extends AppCompatActivity {
         getSupportActionBar().hide();
         setContentView(R.layout.diagnostic_list);
 
+        int ecgLength = getIntent().getIntExtra("ecgLength", 0);
+
+        if (ecgLength == 0) {
+            DialogNoConnection();
+        }
+
         diagnosticList = (ListView) findViewById(R.id.diagnostics);
 
         ImageButton btnExame = (ImageButton) findViewById(R.id.buttonExame);
@@ -59,7 +67,6 @@ public class DiagnosticListActivity extends AppCompatActivity {
                         HomeActivity.class);
                 inicialIntent.putExtra("paciente", paciente);
                 inicialIntent.putParcelableArrayListExtra("listaEcg", ecgList);
-
                 startActivity(inicialIntent);
             }
         });
@@ -85,6 +92,25 @@ public class DiagnosticListActivity extends AppCompatActivity {
         });
 
         diagnosticList.setAdapter(cld);
+    }
+
+    public void DialogNoConnection() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Você não possui diagnósticos cadastrados");
+        builder.setCancelable(true);
+        builder.setNeutralButton("Voltar à tela inicial", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Paciente paciente = getIntent().getExtras().getParcelable("paciente");
+                ArrayList<Ecg> ecgList = getIntent().getParcelableArrayListExtra("listaEcg");
+
+                Intent returnHomeIntent = new Intent(DiagnosticListActivity.this, HomeActivity.class);
+                returnHomeIntent.putExtra("paciente", paciente);
+                returnHomeIntent.putParcelableArrayListExtra("listaEcg", ecgList);
+                startActivity(returnHomeIntent);
+            }
+        });
+        builder.show();
     }
 
     class CustomListDiagnostico extends BaseAdapter {

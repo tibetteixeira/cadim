@@ -94,7 +94,6 @@ public class LoadDiagnosticActivity extends AppCompatActivity {
                         crms.add(diagnostico.getString("crm"));
                         datas_horas.add(diagnostico.getString("data_hora_diagnostico"));
                     }
-                    System.out.println("ECG SIZE -----> " + ecgs.size());
 
                     Paciente paciente = getIntent().getExtras().getParcelable("paciente");
 
@@ -109,6 +108,7 @@ public class LoadDiagnosticActivity extends AppCompatActivity {
                     listDiagnosticIntent.putExtra("datas_horas", datas_horas);
 
                     listDiagnosticIntent.putExtra("paciente", paciente);
+                    listDiagnosticIntent.putExtra("ecgLength", ecgs.size());
                     listDiagnosticIntent.putParcelableArrayListExtra("listaEcg", ecgList);
 
                     startActivity(listDiagnosticIntent);
