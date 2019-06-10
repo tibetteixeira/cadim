@@ -16,6 +16,7 @@ import java.util.Objects;
 
 import br.com.cadim.cadim.DAO.Api;
 import br.com.cadim.cadim.DAO.RequestHandler;
+import br.com.cadim.cadim.Model.Ecg;
 import br.com.cadim.cadim.Model.Paciente;
 import br.com.cadim.cadim.R;
 
@@ -29,6 +30,7 @@ public class LoadDiagnosticActivity extends AppCompatActivity {
     private static ArrayList<String> crms;
     private static ArrayList<String> descricoes;
     private static ArrayList<String> datas_horas;
+    ArrayList<Ecg> ecgList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +46,7 @@ public class LoadDiagnosticActivity extends AppCompatActivity {
         datas_horas = new ArrayList<>();
 
         Paciente paciente = getIntent().getExtras().getParcelable("paciente");
+        ecgList = getIntent().getParcelableArrayListExtra("listaEcg");
         carregarDiagnosticos(paciente.getCpf());
     }
 
@@ -104,7 +107,9 @@ public class LoadDiagnosticActivity extends AppCompatActivity {
                     listDiagnosticIntent.putExtra("nomes", nomes);
                     listDiagnosticIntent.putExtra("crms", crms);
                     listDiagnosticIntent.putExtra("datas_horas", datas_horas);
+
                     listDiagnosticIntent.putExtra("paciente", paciente);
+                    listDiagnosticIntent.putParcelableArrayListExtra("listaEcg", ecgList);
 
                     startActivity(listDiagnosticIntent);
                 }

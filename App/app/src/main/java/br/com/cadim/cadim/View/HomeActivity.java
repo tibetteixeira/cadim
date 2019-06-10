@@ -70,9 +70,9 @@ public class HomeActivity extends AppCompatActivity {
             });
 
             ecgTodayList.setAdapter(cte);
-        } else
+        } else {
             setContentView(R.layout.home_screen);
-
+        }
         FloatingActionButton btnAddExame = (FloatingActionButton) findViewById(R.id.addExame);
 
         ImageButton btnExame = (ImageButton) findViewById(R.id.buttonExame);
@@ -91,19 +91,13 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        btnExame.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                System.out.println("Exame");
-            }
-        });
-
         btnDiagnostico.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent carregarDiagnosticos = new Intent(HomeActivity.this,
                         LoadDiagnosticActivity.class);
                 carregarDiagnosticos.putExtra("paciente", paciente);
+                carregarDiagnosticos.putParcelableArrayListExtra("listaEcg", ecgs);
                 startActivity(carregarDiagnosticos);
             }
         });

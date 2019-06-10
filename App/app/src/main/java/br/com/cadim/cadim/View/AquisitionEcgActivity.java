@@ -80,7 +80,7 @@ public class AquisitionEcgActivity extends AppCompatActivity {
                 Paciente paciente = getIntent().getExtras().getParcelable("paciente");
 
                 saveSignal(signalECG);
-                sendSignal(paciente, signalECG);
+//                sendSignal(paciente, signalECG);
 
                 message(getApplicationContext(), "Success Saved!!");
             }

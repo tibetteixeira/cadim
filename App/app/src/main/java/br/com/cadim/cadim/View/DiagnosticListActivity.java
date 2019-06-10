@@ -15,6 +15,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import br.com.cadim.cadim.Model.Diagnostico;
+import br.com.cadim.cadim.Model.Ecg;
 import br.com.cadim.cadim.Model.Paciente;
 import br.com.cadim.cadim.R;
 
@@ -52,10 +53,13 @@ public class DiagnosticListActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Paciente paciente = getIntent().getExtras().getParcelable("paciente");
+                ArrayList<Ecg> ecgList = getIntent().getParcelableArrayListExtra("listaEcg");
 
                 Intent inicialIntent = new Intent(DiagnosticListActivity.this,
                         HomeActivity.class);
                 inicialIntent.putExtra("paciente", paciente);
+                inicialIntent.putParcelableArrayListExtra("listaEcg", ecgList);
+
                 startActivity(inicialIntent);
             }
         });
