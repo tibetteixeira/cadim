@@ -213,6 +213,9 @@ public class HomeActivity extends AppCompatActivity {
                 diagnosticoRequest = new Diagnostico(diagnosticoId, ecgId, descricao, crm, nome, dataHora);
             }
 
+        } catch (ClassCastException e) {
+            diagnosticoRequest = null;
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
