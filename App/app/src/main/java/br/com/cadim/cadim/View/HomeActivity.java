@@ -110,18 +110,18 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
-    private void menuExam(final Ecg ecg) {
+    private void menuExam(final Ecg ecgSelected) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Selecione").
                 setItems(R.array.ecg_menu_options, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which) {
                             case 0:
-                                downloadExam(ecg);
+                                showExam(ecgSelected);
                                 break;
                             case 1:
                                 try {
-                                    showDiagnotic(ecg);
+                                    showDiagnotic(ecgSelected);
                                 } catch (ExecutionException e) {
                                     e.printStackTrace();
                                 } catch (InterruptedException e) {
@@ -131,7 +131,7 @@ public class HomeActivity extends AppCompatActivity {
                                 }
                                 break;
                             case 2:
-                                showInformation(ecg);
+                                showInformation(ecgSelected);
                                 break;
                         }
                     }
@@ -139,8 +139,10 @@ public class HomeActivity extends AppCompatActivity {
         builder.show();
     }
 
-    private void downloadExam(Ecg ecg) {
-        System.out.println("Mostra exame");
+    private void showExam(Ecg ecg) {
+        Intent showExamIntent = new Intent(HomeActivity.this, ReadEcgActivity.class);
+        showExamIntent.putExtra("ecg", ecg);
+        startActivity(showExamIntent);
     }
 
     private void showDiagnotic(Ecg ecg) throws ExecutionException, InterruptedException, JSONException {

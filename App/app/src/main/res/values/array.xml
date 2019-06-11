@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <array name="ecg_menu_options">
-        <item>Baixar e visualizar</item>
+        <item>Visualizar</item>
         <item>Diagnóstico</item>
         <item>Informações</item>
     </array>

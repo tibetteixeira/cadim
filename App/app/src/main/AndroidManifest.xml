@@ -36,6 +36,7 @@
         <activity android:name=".View.HomeActivity"></activity>
         <activity android:name=".View.DiagnosticActivity"></activity>
         <activity android:name=".Controller.FoundDevices"></activity>
+        <activity android:name=".View.ReadEcgActivity"></activity>
 
     </application>
 
