@@ -123,6 +123,35 @@ Class DbOperation {
 
 		return $diagnosticoEcg; 
 	}
+
+	function getHistoricList($cpf) {
+		try {	
+			$stmt = $this->pdo->prepare("SELECT e_ecg_id, e_ecg_file, e_imc, e_paciente_cpf, e_data_hora
+										FROM ecg
+										WHERE e_paciente_cpf = ?
+										ORDER BY e_data_hora DESC");
+			$stmt->bindValue(1, $cpf);
+			$stmt->execute();
+
+			$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+			$historico = array();
+			foreach ($result as $field) {
+				$exame = array();
+				$exame['ecg_id'] = $field['e_ecg_id'];
+				$exame['file'] = $field['e_ecg_file'];
+				$exame['imc'] = $field['e_imc'];
+				$exame['cpf'] = $field['e_paciente_cpf'];
+				$exame['data_hora_historico'] = $field['e_data_hora'];
+
+				array_push($historico, $exame);
+			}
+
+		} catch(PDOException $e) {
+				print "Erro: " . $e->getMessage();   
+		}
+
+		return $historico; 
+	}
 	
 }
 

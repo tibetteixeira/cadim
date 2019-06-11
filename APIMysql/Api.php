@@ -56,6 +56,13 @@ if(isset($_GET['apicall'])) {
 			$response['message'] = 'Diagnósticos carregado com sucesso';
 			$response['diagnosticEcg'] = $op->getDiagnosticEcgList($_POST['ecgId']);
 			break;
+
+		case 'historicEcgList':
+			isTheseParametersAvailable(array('cpf'));
+			$response['error'] = false;
+			$response['message'] = 'Histórico carregado com sucesso';
+			$response['historic'] = $op->getHistoricList($_POST['cpf']);
+			break;
 	}
 
 } else {
