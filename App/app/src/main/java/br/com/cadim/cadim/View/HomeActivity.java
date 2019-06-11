@@ -96,6 +96,8 @@ public class HomeActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent searchDevicesIntent = new Intent(HomeActivity.this,
                         FoundDevices.class);
+                searchDevicesIntent.putExtra("paciente", paciente);
+                searchDevicesIntent.putParcelableArrayListExtra("listaEcg", ecgs);
                 startActivityForResult(searchDevicesIntent, SELECT_DISCOVERED_DEVICE);
             }
         });

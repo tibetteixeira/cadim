@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.Objects;
 
 import br.com.cadim.cadim.Controller.ConnectionThread;
+import br.com.cadim.cadim.Model.Ecg;
 import br.com.cadim.cadim.Model.Paciente;
 import br.com.cadim.cadim.R;
 import br.com.cadim.cadim.Controller.Rest;
@@ -39,9 +40,8 @@ public class AquisitionEcgActivity extends AppCompatActivity {
 
     static ArrayList<String> signalECGBuffer;
     static ArrayList<String> signalECGTmp;
-    static ArrayList<Integer> signalECGMount;
+    static ArrayList<Integer> ECGSignal;
 
-    private static String signalAcquisitionDate;
     ConnectionThread connect;
 
     private static Redrawer redrawer;
@@ -50,7 +50,6 @@ public class AquisitionEcgActivity extends AppCompatActivity {
     private static int lowerBoundary;
     private static int upperBoundary;
     private static TextView txtPeriodoAquisicao;
-    private static int mountIndex;
 
 
     @Override
@@ -59,29 +58,29 @@ public class AquisitionEcgActivity extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).hide();
         setContentView(R.layout.aquisition_layout);
 
+        Paciente paciente = getIntent().getExtras().getParcelable("paciente");
+        ArrayList<Ecg> ecgs = getIntent().getParcelableArrayListExtra("listaEcg");
 
         ImageButton btnPauseAquisition = (ImageButton) findViewById(R.id.btnPauseAquisition);
         plot = (XYPlot) findViewById(R.id.plotECG);
         txtPeriodoAquisicao = (TextView) findViewById(R.id.txtPeriodoAquisicao);
+
+        ECGSignal = new ArrayList<>();
         signalECGBuffer = new ArrayList<>();
-        signalECGMount = new ArrayList<>();
+
         lowerBoundary = 0;
         upperBoundary = 500;
-        mountIndex = 0;
 
         btnPauseAquisition.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 connect.cancel();
-
                 message(getApplicationContext(), "Comunicação encerrada!");
 
-                ArrayList<Integer> signalECG = mountSignal(signalECGBuffer);
-                Paciente paciente = getIntent().getExtras().getParcelable("paciente");
+//                ArrayList<Integer> signalECG = mountSignal(signalECGBuffer);
 
-                saveSignal(signalECG);
+//                saveSignal(signalECG);
 //                sendSignal(paciente, signalECG);
-
                 message(getApplicationContext(), "Success Saved!!");
             }
         });
@@ -97,17 +96,14 @@ public class AquisitionEcgActivity extends AppCompatActivity {
             System.out.println("Ótimo! Hardware Bluetooth está funcionando :)");
         }
 
-        String btName = getIntent().getExtras().getString("btName");
         String btAddress = getIntent().getExtras().getString("btAddress");
 
         btAdapter.enable();
 
         connect = new ConnectionThread(btAddress);
         connect.start();
-//        plotSignal2();
+        plotSignal(lowerBoundary, upperBoundary);
 
-        /* Um descanso rápido, para evitar bugs esquisitos.
-         */
         try {
             Thread.sleep(500);
         } catch (Exception E) {
@@ -124,18 +120,16 @@ public class AquisitionEcgActivity extends AppCompatActivity {
                 hb = (int) Double.parseDouble(signalEcg.get(index_sync + 6));
                 lb = (int) Double.parseDouble(signalEcg.get(index_sync + 7));
 
-//                System.out.println("HB: " + hb + " LB: " + lb);
                 signal.add((hb << 8) + lb);
             }
         }
-
         return signal;
     }
 
-    private static void plotSignal(ArrayList<Integer> signalECG, int lowerBoundary, int upperBoundary) {
-//        ecgSeries = new ECGModel(signalECG, 10000);
+    private static void plotSignal(int lowerBoundary, int upperBoundary) {
+        ecgSeries = new ECGModel(50);
 
-        MyFadeFormatter formatter = new MyFadeFormatter(1000);
+        MyFadeFormatter formatter = new MyFadeFormatter(500);
         formatter.setLegendIconEnabled(false);
 
         plot.addSeries(ecgSeries, formatter);
@@ -143,27 +137,7 @@ public class AquisitionEcgActivity extends AppCompatActivity {
         plot.setDomainBoundaries(lowerBoundary, upperBoundary, BoundaryMode.FIXED);
 
         // reduce the number of range labels
-        plot.setLinesPerRangeLabel(3);
-
-        // set a redraw rate of 30hz and start immediately:
-        redrawer = new Redrawer(plot, 30, true);
-
-        // start generating ecg data in the background:
-        ecgSeries.start(new WeakReference<>(plot.getRenderer(AdvancedLineAndPointRenderer.class)));
-    }
-
-    private static void plotSignal2() {
-        ecgSeries = new ECGModel(30);
-
-        MyFadeFormatter formatter = new MyFadeFormatter(1000);
-        formatter.setLegendIconEnabled(false);
-
-        plot.addSeries(ecgSeries, formatter);
-        plot.setRangeBoundaries(0, 1000, BoundaryMode.FIXED);
-        plot.setDomainBoundaries(lowerBoundary, upperBoundary, BoundaryMode.FIXED);
-
-        // reduce the number of range labels
-        plot.setLinesPerRangeLabel(3);
+        plot.setLinesPerRangeLabel(5);
 
         // set a redraw rate of 30hz and start immediately:
         redrawer = new Redrawer(plot, 30, true);
@@ -177,39 +151,24 @@ public class AquisitionEcgActivity extends AppCompatActivity {
         @Override
         public void handleMessage(Message msg) {
 
-            /* Esse método é invocado na Activity principal
-                sempre que a thread de conexão Bluetooth recebe
-                uma mensagem.
-             */
             Bundle bundle = msg.getData();
             byte[] data = bundle.getByteArray("data");
             String dataString = new String(data);
 
-            /* Aqui ocorre a decisão de ação, baseada na string
-                recebida. Caso a string corresponda à uma das
-                mensagens de status de conexão (iniciadas com --),
-                atualizamos o status da conexão conforme o código.
-             */
             if (dataString.equals("---N"))
                 System.out.println("Ocorreu um erro durante a conexão D:");
             else if (dataString.equals("---S"))
                 System.out.println("Conectado :D");
             else {
-                System.out.println(dataString);
+
                 signalECGBuffer.addAll(new ArrayList<>(Arrays.asList(dataString.split("\n"))));
 
-
-//                if (signalECGBuffer.size() >= 15000) {
-////                    System.out.println();
-//                    signalECGTmp = (ArrayList<String>) signalECGBuffer.clone();
-//                    signalECGBuffer.clear();
-//                    signalECGMount.addAll(mountSignal(signalECGTmp));
-//                    ecgSeries.appendSignal(signalECGMount);
-//                    signalECGMount.clear();
-////                    plotSignal(signalECGMount, lowerBoundary + 500 * mountIndex, upperBoundary + 500 * mountIndex);
-////                    mountIndex += 1;
-//                }
-
+                if (signalECGBuffer.size() >= 5000) {
+                    signalECGTmp = (ArrayList<String>) signalECGBuffer.clone();
+                    signalECGBuffer.clear();
+                    ECGSignal.addAll(mountSignal(signalECGTmp));
+                    ;
+                }
             }
         }
     };
@@ -244,10 +203,9 @@ public class AquisitionEcgActivity extends AppCompatActivity {
         private Number[] data;
         private final long delayMs;
         private final Thread thread;
-        private ArrayList<Integer> ECGSignal;
         private boolean keepRunning;
         private int latestIndex;
-        private int sizeSignal;
+        private static int numberSamples;
 
         private WeakReference<AdvancedLineAndPointRenderer> rendererRef;
 
@@ -259,12 +217,11 @@ public class AquisitionEcgActivity extends AppCompatActivity {
         ECGModel(int updateFreqHz) {
 
             latestIndex = 0;
-//            ECGSignal = new ArrayList<>(signalECG);
-//            sizeSignal = signalECG.size();
-            data = new Number[0];
+            numberSamples = 10000;
+
+            data = new Number[numberSamples];
             // translate hz into delay (ms):
             delayMs = 1000 / updateFreqHz;
-
 
             thread = new Thread(new Runnable() {
                 @Override
@@ -272,7 +229,9 @@ public class AquisitionEcgActivity extends AppCompatActivity {
                     try {
                         while (keepRunning) {
 
-                            data = getData();
+                            if (latestIndex == numberSamples) {
+                                keepRunning = false;
+                            }
 
                             if (latestIndex == upperBoundary) {
                                 lowerBoundary += 500;
@@ -281,11 +240,7 @@ public class AquisitionEcgActivity extends AppCompatActivity {
                             }
 
                             // insert a sample
-//                            data[latestIndex] = ECGSignal.get(latestIndex);
-
-                            if (latestIndex == sizeSignal - 1) {
-                                keepRunning = false;
-                            }
+                            data[latestIndex] = ECGSignal.get(latestIndex);
 
                             if (rendererRef.get() != null) {
                                 rendererRef.get().setLatestIndex(latestIndex);
@@ -304,24 +259,18 @@ public class AquisitionEcgActivity extends AppCompatActivity {
             });
         }
 
-        void start(final WeakReference<AdvancedLineAndPointRenderer> rendererRef) {
-            this.rendererRef = rendererRef;
+        void start(final WeakReference<AdvancedLineAndPointRenderer> rendererRefPlot) {
+            this.rendererRef = rendererRefPlot;
             keepRunning = true;
-            thread.start();
-        }
 
-        private void appendSignal(ArrayList<Integer> ECGSignalTemp) {
-            Number[] dataTemp = new Number[this.data.length];
+            Handler handle = new Handler();
+            handle.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    thread.start();
+                }
+            }, 7000);
 
-            System.arraycopy(data, 0, dataTemp, 0, this.data.length);
-            this.data = new Number[dataTemp.length + ECGSignalTemp.size()];
-
-            System.arraycopy(dataTemp, 0, this.data, 0, dataTemp.length);
-            System.arraycopy(ECGSignalTemp.toArray(), 0, this.data, dataTemp.length, ECGSignalTemp.size());
-        }
-
-        public Number[] getData() {
-            return this.data;
         }
 
         @Override

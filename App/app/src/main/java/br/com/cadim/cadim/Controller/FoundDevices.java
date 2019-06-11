@@ -18,6 +18,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
+import br.com.cadim.cadim.Model.Ecg;
+import br.com.cadim.cadim.Model.Paciente;
 import br.com.cadim.cadim.R;
 import br.com.cadim.cadim.View.AquisitionEcgActivity;
 
@@ -58,11 +62,18 @@ public class FoundDevices extends ListActivity {
         String btName = item.substring(0, item.indexOf("\n"));
         String btAddress = item.substring(item.indexOf("\n") + 1);
 
-        Intent returnIntent = new Intent(FoundDevices.this,
+        Intent aquisitionEcgIntent = new Intent(FoundDevices.this,
                 AquisitionEcgActivity.class);
-        returnIntent.putExtra("btName", btName);
-        returnIntent.putExtra("btAddress", btAddress);
-        startActivity(returnIntent);
+
+        Paciente paciente = getIntent().getExtras().getParcelable("paciente");
+        ArrayList<Ecg> ecgs = getIntent().getParcelableArrayListExtra("listaEcg");
+
+        aquisitionEcgIntent.putExtra("paciente", paciente);
+        aquisitionEcgIntent.putParcelableArrayListExtra("listaEcg", ecgs);
+        aquisitionEcgIntent.putExtra("btName", btName);
+        aquisitionEcgIntent.putExtra("btAddress", btAddress);
+
+        startActivity(aquisitionEcgIntent);
         finish();
     }
 
