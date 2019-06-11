@@ -22,13 +22,12 @@ import br.com.cadim.cadim.R;
 
 import static br.com.cadim.cadim.View.MainActivity.CODE_POST_REQUEST;
 
-public class LoadDiagnosticActivity extends AppCompatActivity {
+public class LoadHistoricActivity extends AppCompatActivity {
 
     private static ArrayList<Integer> ecgs;
-    private static ArrayList<Integer> diagnosticos;
-    private static ArrayList<String> nomes;
-    private static ArrayList<String> crms;
-    private static ArrayList<String> descricoes;
+    private static ArrayList<String> files;
+    private static ArrayList<Double> imcs;
+    private static ArrayList<String> cpfs;
     private static ArrayList<String> datas_horas;
     ArrayList<Ecg> ecgList;
 
@@ -39,22 +38,21 @@ public class LoadDiagnosticActivity extends AppCompatActivity {
         setContentView(R.layout.load_screen);
 
         ecgs = new ArrayList<>();
-        diagnosticos = new ArrayList<>();
-        nomes = new ArrayList<>();
-        crms = new ArrayList<>();
-        descricoes = new ArrayList<>();
+        files = new ArrayList<>();
+        imcs = new ArrayList<>();
+        cpfs = new ArrayList<>();
         datas_horas = new ArrayList<>();
 
         Paciente paciente = getIntent().getExtras().getParcelable("paciente");
         ecgList = getIntent().getParcelableArrayListExtra("listaEcg");
-        carregarDiagnosticos(paciente.getCpf());
+        carregarHistorico(paciente.getCpf());
     }
 
-    public void carregarDiagnosticos(String cpf) {
+    public void carregarHistorico(String cpf) {
         HashMap<String, String> params = new HashMap<>();
         params.put("cpf", cpf);
 
-        PerformNetworkRequest request = new PerformNetworkRequest(Api.URL_DIAGNOSTIC_LIST,
+        PerformNetworkRequest request = new PerformNetworkRequest(Api.URL_HISTORIC_LIST,
                 params, CODE_POST_REQUEST);
         request.execute();
     }
@@ -83,35 +81,33 @@ public class LoadDiagnosticActivity extends AppCompatActivity {
 
                 this.object = new JSONObject(s);
                 if (!object.getBoolean("error")) {
-                    JSONArray diagnostics = (JSONArray) object.get("diagnostic");
+                    JSONArray historics = (JSONArray) object.get("historic");
 
-                    for (int i = 0; i < diagnostics.length(); i++) {
-                        JSONObject diagnostico = (JSONObject) diagnostics.get(i);
+                    for (int i = 0; i < historics.length(); i++) {
+                        JSONObject diagnostico = (JSONObject) historics.get(i);
                         ecgs.add(diagnostico.getInt("ecg_id"));
-                        diagnosticos.add(diagnostico.getInt("diagnostico_id"));
-                        descricoes.add(diagnostico.getString("descricao"));
-                        nomes.add(diagnostico.getString("nome"));
-                        crms.add(diagnostico.getString("crm"));
-                        datas_horas.add(diagnostico.getString("data_hora_diagnostico"));
+                        files.add(diagnostico.getString("file"));
+                        imcs.add(diagnostico.getDouble("imc"));
+                        cpfs.add(diagnostico.getString("cpf"));
+                        datas_horas.add(diagnostico.getString("data_hora_historico"));
                     }
 
                     Paciente paciente = getIntent().getExtras().getParcelable("paciente");
 
-                    Intent listDiagnosticIntent = new Intent(LoadDiagnosticActivity.this,
-                            DiagnosticListActivity.class);
+                    Intent listHistoricIntent = new Intent(LoadHistoricActivity.this,
+                            HistoricListActivity.class);
 
-                    listDiagnosticIntent.putExtra("ecgs", ecgs);
-                    listDiagnosticIntent.putExtra("diagnosticos", diagnosticos);
-                    listDiagnosticIntent.putExtra("descricoes", descricoes);
-                    listDiagnosticIntent.putExtra("nomes", nomes);
-                    listDiagnosticIntent.putExtra("crms", crms);
-                    listDiagnosticIntent.putExtra("datas_horas", datas_horas);
+                    listHistoricIntent.putExtra("ecgs", ecgs);
+                    listHistoricIntent.putExtra("files", files);
+                    listHistoricIntent.putExtra("imcs", imcs);
+                    listHistoricIntent.putExtra("cpfs", cpfs);
+                    listHistoricIntent.putExtra("datas_horas", datas_horas);
 
-                    listDiagnosticIntent.putExtra("paciente", paciente);
-                    listDiagnosticIntent.putExtra("ecgLength", ecgs.size());
-                    listDiagnosticIntent.putParcelableArrayListExtra("listaEcg", ecgList);
+                    listHistoricIntent.putExtra("paciente", paciente);
+                    listHistoricIntent.putExtra("ecgLength", ecgs.size());
+                    listHistoricIntent.putParcelableArrayListExtra("listaEcg", ecgList);
 
-                    startActivity(listDiagnosticIntent);
+                    startActivity(listHistoricIntent);
                 }
 
             } catch (JSONException e) {

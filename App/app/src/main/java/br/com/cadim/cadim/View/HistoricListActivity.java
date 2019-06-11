@@ -2,12 +2,10 @@ package br.com.cadim.cadim.View;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.bluetooth.BluetoothAdapter;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,10 +21,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
-import br.com.cadim.cadim.Controller.FoundDevices;
 import br.com.cadim.cadim.DAO.Api;
 import br.com.cadim.cadim.DAO.RequestHandler;
 import br.com.cadim.cadim.Model.Diagnostico;
@@ -34,79 +30,51 @@ import br.com.cadim.cadim.Model.Ecg;
 import br.com.cadim.cadim.Model.Paciente;
 import br.com.cadim.cadim.R;
 
-public class HomeActivity extends AppCompatActivity {
-    private static final int REQUEST_ENABLE_BT = 1;
-    private static final int SELECT_DISCOVERED_DEVICE = 3;
-    private Paciente paciente;
-    public Diagnostico diagnosticoEcg;
-    ListView ecgTodayList;
-    ArrayList<Ecg> ecgs;
-    BluetoothAdapter bluetoothAdapter;
+public class HistoricListActivity extends AppCompatActivity {
+
+    private static ArrayList<Integer> ecgs;
+    private static ArrayList<String> files;
+    private static double[] imcs;
+    private static ArrayList<String> cpfs;
+    private static ArrayList<String> datas_horas;
+    private static ListView historicList;
+    ArrayList<Ecg> ecgList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Objects.requireNonNull(getSupportActionBar()).hide();
+        getSupportActionBar().hide();
+        setContentView(R.layout.historic_list);
 
-        paciente = getIntent().getExtras().getParcelable("paciente");
-        ecgs = getIntent().getParcelableArrayListExtra("listaEcg");
+        int ecgLength = getIntent().getIntExtra("ecgLength", 0);
 
-        if (ecgs != null) {
-            setContentView(R.layout.today_exam);
-            ecgTodayList = (ListView) findViewById(R.id.ecgsToday);
-            CustomTodayExam cte = new CustomTodayExam();
-
-
-            ecgTodayList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Ecg ecg = (Ecg) ecgTodayList.getAdapter()
-                            .getItem(position);
-                    menuExam(ecg);
-                }
-            });
-
-            ecgTodayList.setAdapter(cte);
-        } else {
-            setContentView(R.layout.home_screen);
+        if (ecgLength == 0) {
+            DialogNoHistoric();
         }
-        FloatingActionButton btnAddExame = (FloatingActionButton) findViewById(R.id.addExame);
 
-        ImageButton btnExame = (ImageButton) findViewById(R.id.buttonExame);
+        historicList = (ListView) findViewById(R.id.historic);
+
         ImageButton btnDiagnostico = (ImageButton) findViewById(R.id.buttonDiagnosticos);
         ImageButton btnSettings = (ImageButton) findViewById(R.id.buttonSettings);
-        ImageButton btnHistoric = (ImageButton) findViewById(R.id.buttonHistoric);
+        Historic historic = new Historic();
 
-        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        checkBluetooth();
+        ecgs = getIntent().getExtras().getIntegerArrayList("ecgs");
+        files = getIntent().getExtras().getStringArrayList("files");
+        imcs = getIntent().getExtras().getDoubleArray("imcs");
+        cpfs = getIntent().getExtras().getStringArrayList("cpfs");
+        datas_horas = getIntent().getExtras().getStringArrayList("datas_horas");
 
-        btnHistoric.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent carregarHistorico = new Intent(HomeActivity.this,
-                        LoadHistoricActivity.class);
-                carregarHistorico.putExtra("paciente", paciente);
-                carregarHistorico.putParcelableArrayListExtra("listaEcg", ecgs);
-                startActivity(carregarHistorico);
-            }
-        });
-
-        btnAddExame.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent searchDevicesIntent = new Intent(HomeActivity.this,
-                        FoundDevices.class);
-                startActivityForResult(searchDevicesIntent, SELECT_DISCOVERED_DEVICE);
-            }
-        });
 
         btnDiagnostico.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent carregarDiagnosticos = new Intent(HomeActivity.this,
+                Paciente paciente = getIntent().getParcelableExtra("paciente");
+                ArrayList<Ecg> ecgList = getIntent().getParcelableArrayListExtra("listaEcg");
+
+                Intent carregarDiagnosticos = new Intent(HistoricListActivity.this,
                         LoadDiagnosticActivity.class);
                 carregarDiagnosticos.putExtra("paciente", paciente);
-                carregarDiagnosticos.putParcelableArrayListExtra("listaEcg", ecgs);
+                carregarDiagnosticos.putParcelableArrayListExtra("listaEcg", ecgList);
                 startActivity(carregarDiagnosticos);
             }
         });
@@ -117,9 +85,20 @@ public class HomeActivity extends AppCompatActivity {
                 System.out.println("Settings");
             }
         });
+
+        historicList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Ecg ecg = (Ecg) historicList.getAdapter()
+                        .getItem(position);
+                menuExam(ecg);
+            }
+        });
+
+        historicList.setAdapter(historic);
     }
 
-    private void menuExam(final Ecg ecgSelected) {
+    public void menuExam(final Ecg ecgSelected) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Selecione").
                 setItems(R.array.ecg_menu_options, new DialogInterface.OnClickListener() {
@@ -148,8 +127,27 @@ public class HomeActivity extends AppCompatActivity {
         builder.show();
     }
 
+    public void DialogNoHistoric() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Você não possui exames cadastrados");
+        builder.setCancelable(true);
+        builder.setNeutralButton("Voltar à tela inicial", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Paciente paciente = getIntent().getExtras().getParcelable("paciente");
+                ArrayList<Ecg> ecgList = getIntent().getParcelableArrayListExtra("listaEcg");
+
+                Intent returnHomeIntent = new Intent(HistoricListActivity.this, HomeActivity.class);
+                returnHomeIntent.putExtra("paciente", paciente);
+                returnHomeIntent.putParcelableArrayListExtra("listaEcg", ecgList);
+                startActivity(returnHomeIntent);
+            }
+        });
+        builder.show();
+    }
+
     private void showExam(Ecg ecg) {
-        Intent showExamIntent = new Intent(HomeActivity.this, ReadEcgActivity.class);
+        Intent showExamIntent = new Intent(HistoricListActivity.this, ReadEcgActivity.class);
         showExamIntent.putExtra("ecg", ecg);
         startActivity(showExamIntent);
     }
@@ -158,7 +156,7 @@ public class HomeActivity extends AppCompatActivity {
         Diagnostico diagnostico = diagnosticCheck(ecg.getEcgId());
 
         if (diagnostico != null) {
-            Intent diagnosticIntent = new Intent(HomeActivity.this, DiagnosticActivity.class);
+            Intent diagnosticIntent = new Intent(HistoricListActivity.this, DiagnosticActivity.class);
             diagnosticIntent.putExtra("diagnostic", diagnostico);
             startActivity(diagnosticIntent);
         } else {
@@ -172,30 +170,11 @@ public class HomeActivity extends AppCompatActivity {
         System.out.println("Mostra informação");
     }
 
-    private void checkBluetooth() {
-
-        if (bluetoothAdapter == null) {
-            System.out.println("Hardware Bluetooth não suportado.");
-        } else {
-            if (bluetoothAdapter.isEnabled()) {
-                if (bluetoothAdapter.isDiscovering()) {
-                    System.out.println("O Bluetooth está atualmente no processo de descoberta do dispositivo.");
-                } else {
-                    System.out.println("Bluetooth ativado.");
-                }
-            } else {
-                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
-                System.out.println("Solicitando permissão do Bluetooth");
-            }
-        }
-    }
-
     private Diagnostico diagnosticCheck(int ecgId) throws ExecutionException, InterruptedException, JSONException {
         HashMap<String, String> params = new HashMap<>();
         params.put("ecgId", String.valueOf(ecgId));
 
-        HomeActivity.PerformNetworkRequest request = new PerformNetworkRequest(
+        PerformNetworkRequest request = new PerformNetworkRequest(
                 Api.URL_DIAGNOSTIC_ECG_LIST, params, MainActivity.CODE_POST_REQUEST);
 
         JSONObject object = new JSONObject(request.execute().get());
@@ -227,7 +206,7 @@ public class HomeActivity extends AppCompatActivity {
         return diagnosticoRequest;
     }
 
-    class CustomTodayExam extends BaseAdapter {
+    class Historic extends BaseAdapter {
 
 
         @Override
@@ -237,7 +216,14 @@ public class HomeActivity extends AppCompatActivity {
 
         @Override
         public Ecg getItem(int i) {
-            return ecgs.get(i);
+
+            Ecg ecg = new Ecg(ecgs.get(i),
+                    files.get(i),
+                    cpfs.get(i),
+                    datas_horas.get(i),
+                    imcs[i]);
+
+            return ecg;
         }
 
         @Override
@@ -251,8 +237,7 @@ public class HomeActivity extends AppCompatActivity {
             view = getLayoutInflater().inflate(R.layout.custom_exam_list, null);
 
             TextView dataHoraEcg = (TextView) view.findViewById(R.id.data_hora);
-
-            dataHoraEcg.setText(ecgs.get(i).getDataHora());
+            dataHoraEcg.setText(datas_horas.get(i));
             return view;
         }
     }

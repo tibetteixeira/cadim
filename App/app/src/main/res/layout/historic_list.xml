@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -26,34 +25,16 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <LinearLayout
+                <TextView
+                    android:id="@+id/textView3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/_10sdp"
-                    android:layout_marginTop="@dimen/_5sdp"
-                    android:layout_marginRight="@dimen/_10sdp"
-                    android:orientation="horizontal">
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:text="Diagnósticos" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/_100sdp"
-                        android:layout_gravity="start"
-                        android:text="Hoje" />
-
-                    <ImageButton
-                        android:id="@+id/buttonHistoric"
-                        android:layout_width="@dimen/_25sdp"
-                        android:layout_height="@dimen/_25sdp"
-                        android:layout_gravity="end"
-                        android:layout_marginStart="@dimen/_80sdp"
-                        android:background="#FCFCFC"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/historic_icon" />
-                </LinearLayout>
 
                 <ListView
-                    android:id="@+id/ecgsToday"
+                    android:id="@+id/historic"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -61,20 +42,6 @@
             </LinearLayout>
         </ScrollView>
     </LinearLayout>
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/addExame"
-        android:layout_width="wrap_content"
-        android:layout_height="56dp"
-        android:layout_gravity="top|end"
-        android:layout_margin="@dimen/_10sdp"
-        android:layout_marginTop="@dimen/_1sdp"
-        android:layout_weight="1"
-        android:clickable="true"
-        android:focusable="true"
-        app:backgroundTint="@color/floatingButton"
-        app:layout_anchorGravity="bottom|left"
-        app:srcCompat="@drawable/add_icon_selected" />
 
     <LinearLayout
         android:layout_width="match_parent"

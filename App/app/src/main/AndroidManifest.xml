@@ -37,6 +37,8 @@
         <activity android:name=".View.DiagnosticActivity"></activity>
         <activity android:name=".Controller.FoundDevices"></activity>
         <activity android:name=".View.ReadEcgActivity"></activity>
+        <activity android:name=".View.HistoricListActivity"></activity>
+        <activity android:name=".View.LoadHistoricActivity"></activity>
 
     </application>
 

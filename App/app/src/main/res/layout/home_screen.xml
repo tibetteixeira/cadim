@@ -20,9 +20,21 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_100sdp"
+                android:layout_gravity="start"
                 android:text="Hoje" />
+
+            <ImageButton
+                android:id="@+id/buttonHistoric"
+                android:layout_width="@dimen/_25sdp"
+                android:layout_height="@dimen/_25sdp"
+                android:layout_gravity="end"
+                android:layout_marginStart="@dimen/_80sdp"
+                android:background="#FCFCFC"
+                android:scaleType="fitCenter"
+                android:src="@drawable/historic_icon" />
 
         </LinearLayout>
 

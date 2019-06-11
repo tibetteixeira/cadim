@@ -40,7 +40,7 @@ public class DiagnosticListActivity extends AppCompatActivity {
         int ecgLength = getIntent().getIntExtra("ecgLength", 0);
 
         if (ecgLength == 0) {
-            DialogNoConnection();
+            DialogNoDiagnostic();
         }
 
         diagnosticList = (ListView) findViewById(R.id.diagnostics);
@@ -94,7 +94,7 @@ public class DiagnosticListActivity extends AppCompatActivity {
         diagnosticList.setAdapter(cld);
     }
 
-    public void DialogNoConnection() {
+    public void DialogNoDiagnostic() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Você não possui diagnósticos cadastrados");
         builder.setCancelable(true);
