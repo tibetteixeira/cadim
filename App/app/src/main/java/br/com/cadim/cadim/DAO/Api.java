@@ -9,5 +9,4 @@ public class Api {
     public static final String URL_DIAGNOSTIC_ECG_LIST = ROOT_URL + "diagnosticEcgList";
     public static final String URL_HISTORIC_LIST = ROOT_URL + "historicEcgList";
 
-
 }

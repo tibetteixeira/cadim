@@ -221,7 +221,9 @@ public class HistoricListActivity extends AppCompatActivity {
                     files.get(i),
                     cpfs.get(i),
                     datas_horas.get(i),
-                    imcs[i]);
+            //        imcs[i]
+                    0
+            );
 
             return ecg;
         }
