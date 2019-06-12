@@ -43,8 +43,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/_20sdp"
                 android:hint="@string/cpf"
-                android:inputType="text"
-                android:text="123">
+                android:inputType="text">
 
             </EditText>
 
@@ -54,8 +53,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/_20sdp"
                 android:hint="@string/senha"
-                android:inputType="textPassword"
-                android:text="123" />
+                android:inputType="textPassword" />
 
             <Button
                 android:id="@+id/loginButton"

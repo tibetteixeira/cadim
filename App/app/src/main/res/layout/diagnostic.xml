@@ -25,6 +25,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_20sdp"
                 android:layout_marginBottom="@dimen/_1sdp"
+                android:textColor="@color/ap_black"
+                android:textSize="@dimen/_20sdp"
                 android:text="Dr. Rodrigo Alencar" />
 
             <TextView
@@ -32,6 +34,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/_10sdp"
+                android:textColor="@color/ap_black"
+                android:textSize="@dimen/_15sdp"
                 android:text="CRM: 1234" />
 
             <ImageView
@@ -46,12 +50,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/_5sdp"
+                android:textColor="@color/ap_black"
+                android:textSize="@dimen/_14sdp"
                 android:text="Normalmente, o coração é capaz de bombear o sangue pelo corpo sem ter que se esforçar mais do que o necessário. Ele possui um sistema..." />
 
             <TextView
                 android:id="@+id/data_hora"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textSize="@dimen/_12sdp"
                 android:text="05:04 PM, Março 2, 2019" />
         </LinearLayout>
     </ScrollView>

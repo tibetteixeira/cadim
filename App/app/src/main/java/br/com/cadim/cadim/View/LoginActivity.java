@@ -19,8 +19,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 
-import br.com.cadim.cadim.DAO.Api;
-import br.com.cadim.cadim.DAO.RequestHandler;
+import br.com.cadim.cadim.Controller.Api;
+import br.com.cadim.cadim.Controller.RequestHandler;
 import br.com.cadim.cadim.Model.Ecg;
 import br.com.cadim.cadim.Model.Paciente;
 import br.com.cadim.cadim.R;

@@ -26,13 +26,17 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Exame" />
+                android:text="Exame"
+                android:textAllCaps="true"
+                android:textColor="@color/ap_black"
+                android:textSize="25sp"
+                android:textStyle="bold" />
 
             <ImageButton
                 android:id="@+id/btnPauseAquisition"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/_200sdp"
+                android:layout_marginLeft="@dimen/_160sdp"
                 android:background="#FCFCFCFC"
                 app:srcCompat="@android:drawable/ic_media_pause" />
         </LinearLayout>
@@ -41,7 +45,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/_20sdp"
-            android:layout_marginTop="@dimen/_5sdp"
+            android:layout_marginTop="@dimen/_25sdp"
             android:layout_marginRight="@dimen/_20sdp"
             android:layout_weight="1"
             android:orientation="horizontal">
@@ -94,6 +98,7 @@
             android:layout_marginLeft="@dimen/_20sdp"
             android:layout_marginRight="@dimen/_20sdp"
             android:layout_marginBottom="@dimen/_100sdp"
+            android:layout_marginTop="@dimen/_20sdp"
             android:layout_weight="1"
             android:orientation="vertical">
 

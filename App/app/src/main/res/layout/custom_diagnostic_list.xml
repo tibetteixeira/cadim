@@ -14,6 +14,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_20sdp"
             android:layout_marginBottom="@dimen/_1sdp"
+            android:textColor="@color/ap_black"
             android:text="Dr. Rodrigo Alencar" />
 
         <TextView
@@ -21,6 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/_10sdp"
+            android:textColor="@color/ap_black"
             android:text="CRM: 1234" />
 
     <ImageView
@@ -35,6 +37,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/_5sdp"
+            android:textColor="@color/ap_black"
             android:text="Normalmente, o coração é capaz de bombear o sangue pelo corpo sem ter que se esforçar mais do que o necessário. Ele possui um sistema..." />
 
         <TextView

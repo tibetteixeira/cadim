@@ -1,4 +1,4 @@
-package br.com.cadim.cadim.DAO;
+package br.com.cadim.cadim.Controller;
 
 public class Api {
 

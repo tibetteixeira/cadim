@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -14,8 +15,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 
-import br.com.cadim.cadim.DAO.Api;
-import br.com.cadim.cadim.DAO.RequestHandler;
+import br.com.cadim.cadim.Controller.Api;
+import br.com.cadim.cadim.Controller.RequestHandler;
 import br.com.cadim.cadim.Model.Ecg;
 import br.com.cadim.cadim.Model.Paciente;
 import br.com.cadim.cadim.R;
@@ -44,6 +45,9 @@ public class LoadDiagnosticActivity extends AppCompatActivity {
         crms = new ArrayList<>();
         descricoes = new ArrayList<>();
         datas_horas = new ArrayList<>();
+
+        TextView textView = (TextView) findViewById(R.id.textView);
+        textView.setText("Carregando Diagnósticos...");
 
         Paciente paciente = getIntent().getExtras().getParcelable("paciente");
         ecgList = getIntent().getParcelableArrayListExtra("listaEcg");

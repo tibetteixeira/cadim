@@ -24,6 +24,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/_100sdp"
                 android:layout_gravity="start"
+                android:textAllCaps="true"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                android:textColor="@color/ap_black"
                 android:text="Hoje" />
 
             <ImageButton

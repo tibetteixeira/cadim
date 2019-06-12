@@ -27,8 +27,8 @@ import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
 import br.com.cadim.cadim.Controller.FoundDevices;
-import br.com.cadim.cadim.DAO.Api;
-import br.com.cadim.cadim.DAO.RequestHandler;
+import br.com.cadim.cadim.Controller.Api;
+import br.com.cadim.cadim.Controller.RequestHandler;
 import br.com.cadim.cadim.Model.Diagnostico;
 import br.com.cadim.cadim.Model.Ecg;
 import br.com.cadim.cadim.Model.Paciente;
