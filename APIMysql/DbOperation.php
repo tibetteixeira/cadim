@@ -53,6 +53,10 @@ Class DbOperation {
 			}
 			$paciente['ecg'] = $todayEcg;
 
+			if (!array_key_exists( "cpf" , $paciente )) {
+				return false;
+			}
+
 		} catch(PDOException $e) {
 				print "Erro: " . $e->getMessage();   
 		}

@@ -101,6 +101,7 @@ public class LoginActivity extends AppCompatActivity {
                 System.out.println(s);
 
                 this.object = new JSONObject(s);
+
                 if (!object.getBoolean("error")) {
                     Toast.makeText(getApplicationContext(), "Login realizado com sucesso",
                             Toast.LENGTH_SHORT).show();
@@ -145,6 +146,10 @@ public class LoginActivity extends AppCompatActivity {
 
             } catch (JSONException e) {
                 e.printStackTrace();
+
+            } catch (ClassCastException e) {
+                Toast.makeText(getApplicationContext(), "Usuário ou senha inválido",
+                        Toast.LENGTH_SHORT).show();
             }
         }
 

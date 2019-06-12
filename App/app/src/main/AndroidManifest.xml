@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="br.com.cadim.cadim">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -29,16 +28,31 @@
         <activity
             android:name=".View.LoginActivity"
             android:parentActivityName=".View.MainActivity"></activity>
-
-        <activity android:name=".View.DiagnosticListActivity"></activity>
-        <activity android:name=".View.LoadDiagnosticActivity"></activity>
-        <activity android:name=".View.AquisitionEcgActivity"></activity>
+        <activity
+            android:name=".View.DiagnosticListActivity"
+            android:parentActivityName=".View.HomeActivity"></activity>
+        <activity
+            android:name=".View.LoadDiagnosticActivity"
+            android:parentActivityName=".View.HomeActivity"></activity>
+        <activity
+            android:name=".View.AquisitionEcgActivity"
+            android:parentActivityName=".View.HomeActivity"></activity>
         <activity android:name=".View.HomeActivity"></activity>
-        <activity android:name=".View.DiagnosticActivity"></activity>
-        <activity android:name=".Controller.FoundDevices"></activity>
-        <activity android:name=".View.ReadEcgActivity"></activity>
-        <activity android:name=".View.HistoricListActivity"></activity>
-        <activity android:name=".View.LoadHistoricActivity"></activity>
+        <activity
+            android:name=".View.DiagnosticActivity"
+            android:parentActivityName=".View.DiagnosticListActivity"></activity>
+        <activity
+            android:name=".Controller.FoundDevices"
+            android:parentActivityName=".View.HomeActivity"></activity>
+        <activity
+            android:name=".View.ReadEcgActivity"
+            android:parentActivityName=".View.HomeActivity"></activity>
+        <activity
+            android:name=".View.HistoricListActivity"
+            android:parentActivityName=".View.HomeActivity"></activity>
+        <activity
+            android:name=".View.LoadHistoricActivity"
+            android:parentActivityName=".View.HomeActivity"></activity>
 
     </application>
 
