@@ -1,36 +1,15 @@
 package br.com.cadim.cadim.Controller;
 
-import android.content.Intent;
-import android.os.AsyncTask;
-import android.widget.Toast;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import br.com.cadim.cadim.Model.Ecg;
 import br.com.cadim.cadim.Model.Paciente;
-import br.com.cadim.cadim.View.HomeActivity;
-import br.com.cadim.cadim.View.LoginActivity;
-import br.com.cadim.cadim.View.MainActivity;
 
 public class LoginController {
-//public class LoginController extends AsyncTask<Void, Void, String> {
-
-    private String url;
-    private HashMap<String, String> params;
-    private int requestCode;
-    private JSONObject object;
-
-    public LoginController(String url, HashMap<String, String> params, int requestCode) {
-        this.url = url;
-        this.params = params;
-        this.requestCode = requestCode;
-        this.object = null;
-    }
 
     public static Paciente getPaciente(JSONObject objectLogin) {
         try {
@@ -81,25 +60,5 @@ public class LoginController {
 
         return null;
     }
-
-//
-//    @Override
-//    protected void onPostExecute(String s) {
-//        super.onPostExecute(s);
-//    }
-//
-//    @Override
-//    protected String doInBackground(Void... voids) {
-//        RequestHandler requestHandler = new RequestHandler();
-//
-//        if (requestCode == MainActivity.CODE_POST_REQUEST)
-//            return requestHandler.sendPostRequest(url, params);
-//
-//
-//        if (requestCode == MainActivity.CODE_GET_REQUEST)
-//            return requestHandler.sendGetRequest(url);
-//
-//        return null;
-//    }
 }
 
