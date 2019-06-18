@@ -13,8 +13,6 @@ import android.support.v7.app.AppCompatActivity;
 import br.com.cadim.cadim.R;
 
 public class MainActivity extends AppCompatActivity {
-    public static final int CODE_GET_REQUEST = 1024;
-    public static final int CODE_POST_REQUEST = 1025;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
