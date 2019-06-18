@@ -21,7 +21,8 @@ import br.com.cadim.cadim.Model.Ecg;
 import br.com.cadim.cadim.Model.Paciente;
 import br.com.cadim.cadim.R;
 
-import static br.com.cadim.cadim.View.MainActivity.CODE_POST_REQUEST;
+import static br.com.cadim.cadim.Controller.PerformNetworkRequest.CODE_POST_REQUEST;
+import static br.com.cadim.cadim.Controller.PerformNetworkRequest.CODE_GET_REQUEST;
 
 public class LoadHistoricActivity extends AppCompatActivity {
 
@@ -129,7 +130,7 @@ public class LoadHistoricActivity extends AppCompatActivity {
                 return requestHandler.sendPostRequest(url, params);
 
 
-            if (requestCode == MainActivity.CODE_GET_REQUEST)
+            if (requestCode == CODE_GET_REQUEST)
                 return requestHandler.sendGetRequest(url);
 
             return null;

@@ -30,6 +30,9 @@ import br.com.cadim.cadim.Model.Ecg;
 import br.com.cadim.cadim.Model.Paciente;
 import br.com.cadim.cadim.R;
 
+import static br.com.cadim.cadim.Controller.PerformNetworkRequest.CODE_POST_REQUEST;
+import static br.com.cadim.cadim.Controller.PerformNetworkRequest.CODE_GET_REQUEST;
+
 public class HistoricListActivity extends AppCompatActivity {
 
     private static ArrayList<Integer> ecgs;
@@ -175,7 +178,7 @@ public class HistoricListActivity extends AppCompatActivity {
         params.put("ecgId", String.valueOf(ecgId));
 
         PerformNetworkRequest request = new PerformNetworkRequest(
-                Api.URL_DIAGNOSTIC_ECG_LIST, params, MainActivity.CODE_POST_REQUEST);
+                Api.URL_DIAGNOSTIC_ECG_LIST, params, CODE_POST_REQUEST);
 
         JSONObject object = new JSONObject(request.execute().get());
         return returnDiagnostic(object);
@@ -268,11 +271,11 @@ public class HistoricListActivity extends AppCompatActivity {
         protected String doInBackground(Void... voids) {
             RequestHandler requestHandler = new RequestHandler();
 
-            if (requestCode == MainActivity.CODE_POST_REQUEST)
+            if (requestCode == CODE_POST_REQUEST)
                 return requestHandler.sendPostRequest(url, params);
 
 
-            if (requestCode == MainActivity.CODE_GET_REQUEST)
+            if (requestCode == CODE_GET_REQUEST)
                 return requestHandler.sendGetRequest(url);
 
             return null;

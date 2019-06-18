@@ -1,8 +1,6 @@
 package br.com.cadim.cadim.View;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -11,16 +9,17 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
+import java.util.concurrent.ExecutionException;
 
 import br.com.cadim.cadim.Controller.Api;
-import br.com.cadim.cadim.Controller.RequestHandler;
+import br.com.cadim.cadim.Controller.LoginController;
+import br.com.cadim.cadim.Controller.PerformNetworkRequest;
 import br.com.cadim.cadim.Model.Ecg;
 import br.com.cadim.cadim.Model.Paciente;
 import br.com.cadim.cadim.R;
@@ -70,102 +69,42 @@ public class LoginActivity extends AppCompatActivity {
         params.put("cpf", cpf);
         params.put("senha", senha);
 
-        PerformNetworkRequest request = new PerformNetworkRequest(Api.URL_LOGIN, params, MainActivity.CODE_POST_REQUEST);
-        request.execute();
-    }
+        PerformNetworkRequest request = new PerformNetworkRequest(Api.URL_LOGIN, params, PerformNetworkRequest.CODE_POST_REQUEST);
+        try {
 
-    @SuppressLint("StaticFieldLeak")
-    private class PerformNetworkRequest extends AsyncTask<Void, Void, String> {
+            JSONObject objectLogin = new JSONObject(request.execute().get());
 
-        private String url;
-        private HashMap<String, String> params;
-        private int requestCode;
-        private JSONObject object;
-
-        PerformNetworkRequest(String url, HashMap<String, String> params, int requestCode) {
-            this.url = url;
-            this.params = params;
-            this.requestCode = requestCode;
-            this.object = null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-
-            try {
-
-                Intent loadIncialIntent = new Intent(LoginActivity.this,
-                        HomeActivity.class);
-
-                System.out.println(s);
-
-                this.object = new JSONObject(s);
-
-                if (!object.getBoolean("error")) {
+            if (!objectLogin.getBoolean("error")) {
+                if (objectLogin.get("login").equals("false")) {
+                    Toast.makeText(getApplicationContext(), "Usuário ou senha inválido",
+                            Toast.LENGTH_SHORT).show();
+                } else {
                     Toast.makeText(getApplicationContext(), "Login realizado com sucesso",
                             Toast.LENGTH_SHORT).show();
 
-                    String cpf = ((JSONObject) object.get("login")).getString("cpf");
-                    String nome = ((JSONObject) object.get("login")).getString("nome");
-                    String dataNascimento = ((JSONObject) object.get("login")).getString("data_nasc");
-                    String email = ((JSONObject) object.get("login")).getString("email");
-                    String senha = ((JSONObject) object.get("login")).getString("senha");
-                    String sexo = ((JSONObject) object.get("login")).getString("sexo");
-                    int altura = ((JSONObject) object.get("login")).getInt("altura");
-                    double peso = ((JSONObject) object.get("login")).getDouble("peso");
-                    int telefone = ((JSONObject) object.get("login")).getInt("telefone");
-                    JSONArray ecgArray = ((JSONObject) object.get("login")).getJSONArray("ecg");
+                    Paciente paciente = LoginController.getPaciente(objectLogin);
+                    ArrayList<Ecg> ecgTodayList = LoginController.getEcg(objectLogin, paciente.getCpf());
 
-                    ArrayList<Ecg> ecgTodayList = new ArrayList<>();
-                    JSONObject ecg;
+                    Intent loadIncialIntent = new Intent(LoginActivity.this,
+                            HomeActivity.class);
 
-                    if (!(((JSONObject) ecgArray.get(0)).getString("data_hora").equals("null"))) {
-                        for (int i = 0; i < ecgArray.length(); i++) {
-                            ecg = (JSONObject) ecgArray.get(i);
-
-                            ecgTodayList.add(
-                                    new Ecg(Integer.parseInt(ecg.getString("ecg_id")),
-                                            ecg.getString("ecg_file"),
-                                            cpf,
-                                            ecg.getString("data_hora"),
-                                            Double.parseDouble(ecg.getString("imc"))));
-                        }
-                        loadIncialIntent.putParcelableArrayListExtra("listaEcg", ecgTodayList);
-                    }
-                    else {
-                        loadIncialIntent.putParcelableArrayListExtra("listaEcg", null);
-                    }
-
-                    Paciente paciente = new Paciente(cpf, nome, dataNascimento, email, senha, sexo, altura, peso, telefone);
+                    loadIncialIntent.putParcelableArrayListExtra("listaEcg", ecgTodayList);
                     loadIncialIntent.putExtra("paciente", paciente);
 
                     startActivity(loadIncialIntent);
-
                 }
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-
-            } catch (ClassCastException e) {
-                Toast.makeText(getApplicationContext(), "Usuário ou senha inválido",
-                        Toast.LENGTH_SHORT).show();
             }
-        }
 
-        @Override
-        protected String doInBackground(Void... voids) {
-            RequestHandler requestHandler = new RequestHandler();
-
-            if (requestCode == MainActivity.CODE_POST_REQUEST)
-                return requestHandler.sendPostRequest(url, params);
-
-
-            if (requestCode == MainActivity.CODE_GET_REQUEST)
-                return requestHandler.sendGetRequest(url);
-
-            return null;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (NullPointerException e) {
+            Toast.makeText(getApplicationContext(), "Usuário ou senha inválido",
+                    Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
         }
     }
-
 }
