@@ -174,8 +174,20 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void showInformation(Ecg ecg) {
-        System.out.println("Mostra informação");
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Informações");
+        builder.setCancelable(true);
+        builder.setMessage(ecg.getDataHora() + "\n" + "67 bpm" + "\n" + "15 s");
+        builder.setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+//                Ao clicar, o AlertDialog fechará
+            }
+        });
+        builder.show();
     }
+
 
     private void checkBluetooth() {
 
