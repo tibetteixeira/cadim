@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -26,16 +25,16 @@ import java.util.HashMap;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
-import br.com.cadim.cadim.Controller.FoundDevices;
 import br.com.cadim.cadim.Controller.Api;
-import br.com.cadim.cadim.Controller.RequestHandler;
+import br.com.cadim.cadim.Controller.DiagnosticController;
+import br.com.cadim.cadim.Controller.FoundDevices;
+import br.com.cadim.cadim.Controller.PerformNetworkRequest;
 import br.com.cadim.cadim.Model.Diagnostico;
 import br.com.cadim.cadim.Model.Ecg;
 import br.com.cadim.cadim.Model.Paciente;
 import br.com.cadim.cadim.R;
 
 import static br.com.cadim.cadim.Controller.PerformNetworkRequest.CODE_POST_REQUEST;
-import static br.com.cadim.cadim.Controller.PerformNetworkRequest.CODE_GET_REQUEST;
 
 public class HomeActivity extends AppCompatActivity {
     private static final int REQUEST_ENABLE_BT = 1;
@@ -212,40 +211,14 @@ public class HomeActivity extends AppCompatActivity {
         HashMap<String, String> params = new HashMap<>();
         params.put("ecgId", String.valueOf(ecgId));
 
-        HomeActivity.PerformNetworkRequest request = new PerformNetworkRequest(
+        PerformNetworkRequest request = new PerformNetworkRequest(
                 Api.URL_DIAGNOSTIC_ECG_LIST, params, CODE_POST_REQUEST);
 
         JSONObject object = new JSONObject(request.execute().get());
-        return returnDiagnostic(object);
+        return DiagnosticController.returnDiagnostic(object);
     }
 
-    public Diagnostico returnDiagnostic(JSONObject object) {
-        Diagnostico diagnosticoRequest = null;
-        try {
-            JSONObject diagnosticoJSON = (JSONObject) object.get("diagnosticEcg");
-
-            if (!object.getBoolean("error") && diagnosticoJSON.length() > 0) {
-                int diagnosticoId = Integer.parseInt(diagnosticoJSON.getString("diagnostico_id"));
-                int ecgId = Integer.parseInt(diagnosticoJSON.getString("ecg_id"));
-                String crm = diagnosticoJSON.getString("crm");
-                String nome = diagnosticoJSON.getString("nome");
-                String dataHora = diagnosticoJSON.getString("data_hora_diagnostico");
-                String descricao = diagnosticoJSON.getString("descricao");
-
-                diagnosticoRequest = new Diagnostico(diagnosticoId, ecgId, descricao, crm, nome, dataHora);
-            }
-
-        } catch (ClassCastException e) {
-            diagnosticoRequest = null;
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return diagnosticoRequest;
-    }
-
-    class CustomTodayExam extends BaseAdapter {
-
+    private class CustomTodayExam extends BaseAdapter {
 
         @Override
         public int getCount() {
@@ -271,41 +244,6 @@ public class HomeActivity extends AppCompatActivity {
 
             dataHoraEcg.setText(ecgs.get(i).getDataHora());
             return view;
-        }
-    }
-
-    @SuppressLint("StaticFieldLeak")
-    private class PerformNetworkRequest extends AsyncTask<Void, Void, String> {
-
-        private String url;
-        private HashMap<String, String> params;
-        private int requestCode;
-        private JSONObject object;
-
-        PerformNetworkRequest(String url, HashMap<String, String> params, int requestCode) {
-            this.url = url;
-            this.params = params;
-            this.requestCode = requestCode;
-            this.object = null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-        }
-
-        @Override
-        protected String doInBackground(Void... voids) {
-            RequestHandler requestHandler = new RequestHandler();
-
-            if (requestCode == CODE_POST_REQUEST)
-                return requestHandler.sendPostRequest(url, params);
-
-
-            if (requestCode == CODE_GET_REQUEST)
-                return requestHandler.sendGetRequest(url);
-
-            return null;
         }
     }
 }

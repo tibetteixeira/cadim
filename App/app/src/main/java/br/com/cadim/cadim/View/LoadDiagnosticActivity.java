@@ -1,37 +1,30 @@
 package br.com.cadim.cadim.View;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
+import java.util.concurrent.ExecutionException;
 
 import br.com.cadim.cadim.Controller.Api;
-import br.com.cadim.cadim.Controller.RequestHandler;
+import br.com.cadim.cadim.Controller.DiagnosticController;
+import br.com.cadim.cadim.Controller.PerformNetworkRequest;
+import br.com.cadim.cadim.Model.Diagnostico;
 import br.com.cadim.cadim.Model.Ecg;
 import br.com.cadim.cadim.Model.Paciente;
 import br.com.cadim.cadim.R;
 
 import static br.com.cadim.cadim.Controller.PerformNetworkRequest.CODE_POST_REQUEST;
-import static br.com.cadim.cadim.Controller.PerformNetworkRequest.CODE_GET_REQUEST;
 
 public class LoadDiagnosticActivity extends AppCompatActivity {
 
-    private static ArrayList<Integer> ecgs;
-    private static ArrayList<Integer> diagnosticos;
-    private static ArrayList<String> nomes;
-    private static ArrayList<String> crms;
-    private static ArrayList<String> descricoes;
-    private static ArrayList<String> datas_horas;
     ArrayList<Ecg> ecgList;
 
     @Override
@@ -39,13 +32,6 @@ public class LoadDiagnosticActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Objects.requireNonNull(getSupportActionBar()).hide();
         setContentView(R.layout.load_screen);
-
-        ecgs = new ArrayList<>();
-        diagnosticos = new ArrayList<>();
-        nomes = new ArrayList<>();
-        crms = new ArrayList<>();
-        descricoes = new ArrayList<>();
-        datas_horas = new ArrayList<>();
 
         TextView textView = (TextView) findViewById(R.id.textView);
         textView.setText("Carregando Diagnósticos...");
@@ -61,82 +47,30 @@ public class LoadDiagnosticActivity extends AppCompatActivity {
 
         PerformNetworkRequest request = new PerformNetworkRequest(Api.URL_DIAGNOSTIC_LIST,
                 params, CODE_POST_REQUEST);
-        request.execute();
-    }
+        try {
+            JSONObject objectLoadDiagnostic = new JSONObject(request.execute().get());
 
-    @SuppressLint("StaticFieldLeak")
-    private class PerformNetworkRequest extends AsyncTask<Void, Void, String> {
+            if (!objectLoadDiagnostic.getBoolean("error")) {
+                ArrayList<Diagnostico> listDiagnostic = DiagnosticController.getListDiagnostic(objectLoadDiagnostic);
 
-        private String url;
-        private HashMap<String, String> params;
-        private int requestCode;
-        private JSONObject object;
+                Paciente paciente = getIntent().getExtras().getParcelable("paciente");
 
-        PerformNetworkRequest(String url, HashMap<String, String> params, int requestCode) {
-            this.url = url;
-            this.params = params;
-            this.requestCode = requestCode;
-            this.object = null;
-        }
+                Intent listDiagnosticIntent = new Intent(LoadDiagnosticActivity.this,
+                        DiagnosticListActivity.class);
 
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
+                listDiagnosticIntent.putExtra("listDiagnostic", listDiagnostic);
+                listDiagnosticIntent.putExtra("paciente", paciente);
+                listDiagnosticIntent.putExtra("diagnosticLength", listDiagnostic.size());
+                listDiagnosticIntent.putParcelableArrayListExtra("listaEcg", ecgList);
 
-            try {
-                System.out.println(s);
-
-                this.object = new JSONObject(s);
-                if (!object.getBoolean("error")) {
-                    JSONArray diagnostics = (JSONArray) object.get("diagnostic");
-
-                    for (int i = 0; i < diagnostics.length(); i++) {
-                        JSONObject diagnostico = (JSONObject) diagnostics.get(i);
-                        ecgs.add(diagnostico.getInt("ecg_id"));
-                        diagnosticos.add(diagnostico.getInt("diagnostico_id"));
-                        descricoes.add(diagnostico.getString("descricao"));
-                        nomes.add(diagnostico.getString("nome"));
-                        crms.add(diagnostico.getString("crm"));
-                        datas_horas.add(diagnostico.getString("data_hora_diagnostico"));
-                    }
-
-                    Paciente paciente = getIntent().getExtras().getParcelable("paciente");
-
-                    Intent listDiagnosticIntent = new Intent(LoadDiagnosticActivity.this,
-                            DiagnosticListActivity.class);
-
-                    listDiagnosticIntent.putExtra("ecgs", ecgs);
-                    listDiagnosticIntent.putExtra("diagnosticos", diagnosticos);
-                    listDiagnosticIntent.putExtra("descricoes", descricoes);
-                    listDiagnosticIntent.putExtra("nomes", nomes);
-                    listDiagnosticIntent.putExtra("crms", crms);
-                    listDiagnosticIntent.putExtra("datas_horas", datas_horas);
-
-                    listDiagnosticIntent.putExtra("paciente", paciente);
-                    listDiagnosticIntent.putExtra("ecgLength", ecgs.size());
-                    listDiagnosticIntent.putParcelableArrayListExtra("listaEcg", ecgList);
-
-                    startActivity(listDiagnosticIntent);
-                }
-
-            } catch (JSONException e) {
-                e.printStackTrace();
+                startActivity(listDiagnosticIntent);
             }
-        }
-
-        //the network operation will be performed in background
-        @Override
-        protected String doInBackground(Void... voids) {
-            RequestHandler requestHandler = new RequestHandler();
-
-            if (requestCode == CODE_POST_REQUEST)
-                return requestHandler.sendPostRequest(url, params);
-
-
-            if (requestCode == CODE_GET_REQUEST)
-                return requestHandler.sendGetRequest(url);
-
-            return null;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
         }
     }
 }

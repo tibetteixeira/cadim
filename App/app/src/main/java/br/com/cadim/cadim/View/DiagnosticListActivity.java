@@ -23,12 +23,7 @@ import br.com.cadim.cadim.R;
 
 public class DiagnosticListActivity extends AppCompatActivity {
 
-    private static ArrayList<Integer> ecgs;
-    private static ArrayList<Integer> diagnosticos;
-    private static ArrayList<String> nomes;
-    private static ArrayList<String> crms;
-    private static ArrayList<String> descricoes;
-    private static ArrayList<String> datas_horas;
+    private static ArrayList<Diagnostico> listDiagnostic;
     private static ListView diagnosticList;
 
     @Override
@@ -37,9 +32,9 @@ public class DiagnosticListActivity extends AppCompatActivity {
         getSupportActionBar().hide();
         setContentView(R.layout.diagnostic_list);
 
-        int ecgLength = getIntent().getIntExtra("ecgLength", 0);
+        int diagnosticLength = getIntent().getIntExtra("diagnosticLength", 0);
 
-        if (ecgLength == 0) {
+        if (diagnosticLength == 0) {
             DialogNoDiagnostic();
         }
 
@@ -49,13 +44,7 @@ public class DiagnosticListActivity extends AppCompatActivity {
         ImageButton btnSettings = (ImageButton) findViewById(R.id.buttonSettings);
         CustomListDiagnostico cld = new CustomListDiagnostico();
 
-        ecgs = getIntent().getExtras().getIntegerArrayList("ecgs");
-        diagnosticos = getIntent().getExtras().getIntegerArrayList("diagnosticos");
-        descricoes = getIntent().getExtras().getStringArrayList("descricoes");
-        nomes = getIntent().getExtras().getStringArrayList("nomes");
-        crms = getIntent().getExtras().getStringArrayList("crms");
-        datas_horas = getIntent().getExtras().getStringArrayList("datas_horas");
-
+        listDiagnostic = getIntent().getExtras().getParcelableArrayList("listDiagnostic");
 
         btnExame.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,24 +102,16 @@ public class DiagnosticListActivity extends AppCompatActivity {
         builder.show();
     }
 
-    class CustomListDiagnostico extends BaseAdapter {
+    private class CustomListDiagnostico extends BaseAdapter {
 
         @Override
         public int getCount() {
-            return diagnosticos.size();
+            return listDiagnostic.size();
         }
 
         @Override
         public Diagnostico getItem(int i) {
-
-            Diagnostico diagnostico = new Diagnostico(diagnosticos.get(i),
-                    ecgs.get(i),
-                    descricoes.get(i),
-                    crms.get(i),
-                    nomes.get(i),
-                    datas_horas.get(i));
-
-            return diagnostico;
+            return listDiagnostic.get(i);
         }
 
         @Override
@@ -148,14 +129,14 @@ public class DiagnosticListActivity extends AppCompatActivity {
             TextView descricao = (TextView) view.findViewById(R.id.descricao);
             TextView data_hora = (TextView) view.findViewById(R.id.data_hora);
 
-            nome.setText("Dr. " + nomes.get(i));
-            crm.setText("CRM: " + crms.get(i));
-            int tamanhoDescricao = descricoes.get(i).length();
+            nome.setText("Dr. " + listDiagnostic.get(i).getNomeMedico());
+            crm.setText("CRM: " + listDiagnostic.get(i).getCrm());
+            int tamanhoDescricao = listDiagnostic.get(i).getDescricao().length();
             if (tamanhoDescricao >= 150)
-                descricao.setText(descricoes.get(i).substring(0, 150) + "...");
+                descricao.setText(listDiagnostic.get(i).getDescricao().substring(0, 150) + "...");
             else
-                descricao.setText(descricoes.get(i).substring(0, tamanhoDescricao));
-            data_hora.setText(datas_horas.get(i));
+                descricao.setText(listDiagnostic.get(i).getDescricao().substring(0, tamanhoDescricao));
+            data_hora.setText(listDiagnostic.get(i).getDataHora());
 
             return view;
         }
